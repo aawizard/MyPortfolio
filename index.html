@@ -14,7 +14,7 @@
   <!-- <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> -->
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=https://fonts.googleapis.com/css?family=Roboto:400,500,600,700|Raleway:400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=https://fonts.googleapis.com/css?family=Inconsolata:400,500,600,700|Raleway:400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
@@ -37,11 +37,12 @@
 <body>
 
   <!-- ======= Navbar ======= -->
+
   <nav class="navbar navbar-light custom-navbar">
     <div class="container">
       <a class="navbar-brand" href="index.html">Ananya Agarwal</a>
       <div class="row-md-1">
-      <a href="about.html">About Me</a>
+      <a  href="about.html">About Me</a>
       <a href="resume.html">Resume</a>
       <a href="contact.html">Contact</a>
         <span></span>
@@ -55,84 +56,98 @@
     <section class="section site-portfolio">
       <div class="container">
         <div class="row mb-5 align-items-left">
-          <!-- <div class="col-md-12 col-lg-6 mb-4 mb-lg-0" data-aos="fade-up">
-            <h2>Hey, I'm Ananya Agarwal</h2>
-            <p class="mb-0">Welcome to my Portfolio</p>
-          </div> -->
-          <!-- <div class="col-md-12 col-lg-6 text-start text-lg-end" data-aos="fade-up" data-aos-delay="100"> -->
             <div id="filters" class="filters">
               <a href="#" data-filter="*" class="active">All</a>
-              <a href="#" data-filter=".web">CV</a>
-              <a href="#" data-filter=".design">Design</a>
-              <a href="#" data-filter=".branding">Branding</a>
-              <a href="#" data-filter=".photography">Photography</a>
+              <a href="#" data-filter=".CV">CV</a>
+              <a href="#" data-filter=".AI">AI/ML</a>
+              <a href="#" data-filter=".navigation">Navigation</a>
+              <a href="#" data-filter=".ROS">ROS</a>
+              <a href="#" data-filter=".Robotics">Robotics Basics</a>
             <!-- </div> -->
           </div>
         </div>
         <div id="portfolio-grid" class="row no-gutter" data-aos="fade-up" data-aos-delay="200">
-          <div class="item web col-sm-6 col-md-4 col-lg-4 mb-4">
+          <div class="item CV ROS col-sm-6 col-md-4 col-lg-4 mb-4 custom-tile">
+            <a href="coming.html" class="item-wrap fancybox">
+              <div class="work-info">
+                <h3>HANGMAN ASSISTANT</h3>
+                <span>Franka Emika Panda Writing</span>
+              </div>
+              <img class="img-fluid" src="assets/img/franka.gif">
+              <h4>Hangman Assitant</h4>
+                <p>Create a ROS2 package to assist the hangman game by writing on a whiteboard and take in user guesses
+                  using a camera</p>
+                <h6>Skills: ROS2, Moveit, OpenCV, Force-control</h6>
+            </a>
+          </div>
+          <div class="item Robotics col-sm-6 col-md-4 col-lg-4 mb-4 custom-tile">
+            <a href="coming.html" class="item-wrap fancybox">
+              <div class="work-info">
+                <h3>KUKA MOTION PLANNING SIMULATION</h3>
+                <span>Robot Manipulation</span>
+              </div>
+              <img class="img-fluid" src="assets/img/project-449.gif">
+              <h4>Kuka motion planning simulation</h4>
+                <p>Controller for Youbot to pick and place a block with user-specific positions and then simulate it in Coppeliasim</p>
+                <h6>Skills: Kinematics, Motion Planning, Path Planning, Copilliiasim, Trajectory Generation</h6>
+            </a>
+          </div>
+          <div class="item Robotics col-sm-6 col-md-4 col-lg-4 mb-4 custom-tile">
             <a href="work-single.html" class="item-wrap fancybox">
               <div class="work-info">
-                <h3>Boxed Water</h3>
-                <span>Web</span>
+                <h3>JACK IN THE BOX</h3>
+                <span>Dynamics</span>
               </div>
-              <img class="img-fluid" src="assets/img/ducky.gif">
-              <h3>Kitchen Sink</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit explicabo inventore</p>
-                <h6>Skills: ROS2, Computer Vision</h6>
+              <img class="img-fluid" src="assets/img/jack-in-box.gif">
+              <h4>Jack in the box</h4>
+                <p>Simulates 2D physics of impacts on a jack in the box with external forces</p>
+                <h6>Skills: Langrangian Machine Dynamics, Rigid Body Transforms, Google Colab</h6>
             </a>
           </div>
 
-          <div class="item photography col-sm-6 col-md-4 col-lg-4 mb-4">
-            <a href="work-double.html" class="item-wrap fancybox">
+          <div class="item CV col-sm-6 col-md-4 col-lg-4 mb-4 custom-tile">
+            <a href="coming.html" class="item-wrap fancybox">
               <div class="work-info">
-                <h3>KUKA MOTION PLANNING 
-                    SIMULATION</h3>
-                <span>Photography</span>
+                <h3>ROBOT PEN THEIF</h3>
+                <span>OpenCV</span>
               </div>
-              <img class="img-fluid" src="assets/img/project-449.gif">
+              <img class="img-fluid" src="assets/img/px100.gif">
+              <h4>Robot Pen Theif</h4>
+                <p>Identify the location of pen using opencv, apply frame transforms and grab the pen</p>
+                <h6>Skills: OpenCV, Python, Manipulation</h6>
             </a>
           </div>
-          <div class="item branding col-sm-6 col-md-4 col-lg-4 mb-4">
-            <a href="work-single.html" class="item-wrap fancybox">
+
+          <div class="item CV ROS AI navigation col-sm-6 col-md-4 col-lg-4 mb-4 custom-tile">
+            <a href="coming.html" class="item-wrap fancybox">
               <div class="work-info">
-                <h3>Cocooil</h3>
-                <span>Branding</span>
-              </div>
-              <img class="img-fluid" src="assets/img/jack-in-box.gif">
-            </a>
-          </div>
-          <div class="item design col-sm-6 col-md-4 col-lg-4 mb-4">
-            <a href="work-single.html" class="item-wrap fancybox">
-              <div class="work-info">
-                <h3>Nike Shoe</h3>
-                <span>Design</span>
+                <h3>VOICE CONTROL PICK AND PLACE</h3>
+                <span>Mobile manipulator</span>
               </div>
               <img class="img-fluid" src="assets/img/kinova.gif">
-              <h3>Kitchen Sink</h3>
-                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit explicabo inventore</span>
+              <h4>Voice Controled pick and place</h4>
+                <p>Select object of interest using voice command and perform pick and place using a manipulator arm mounted
+                  on a mobile base.</p>
+                <h6>Skills: ROS1, YOLO, nav1, moveit</h6>
             </a>
           </div>
-          <div class="item photography col-sm-6 col-md-4 col-lg-4 mb-4">
-            <a href="work-single.html" class="item-wrap fancybox">
+          
+          
+          <div class="item CV ROS AI col-sm-6 col-md-4 col-lg-4 mb-4 custom-tile">
+            <a href="coming.html" class="item-wrap fancybox">
               <div class="work-info">
-                <h3>Kitchen Sink</h3>
-                <span>Photography</span>
+                <h3>SELECTIVE TABLE TOP GRASPING</h3>
+                <span>Deep Learning</span>
               </div>
-              <img class="img-fluid" src="assets/img/img_5.jpg">
+              <img class="img-fluid" src="assets/img/baxter.gif">
+              <h4>Selective Table-top Grasping</h4>
+                <p>Perform selective grasping in an cluttered environment, picking object of interest out of multiple objects</p>
+                <h6>Skills: ROS1, moveit, PyTorch, Cuda Toolkit, Deep-Learning</h6>
             </a>
           </div>
-          <div class="item branding col-sm-6 col-md-4 col-lg-4 mb-4">
-            <a href="work-single.html" class="item-wrap fancybox">
-              <div class="work-info">
-                <h3>Hangman</h3>
-                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit explicabo inventore.</span>
-              </div>
-              <img class="img-fluid" src="assets/img/img_6.jpg">
-            </a>
-          </div>
-        </div>
-      </div>
+          
+          
+          
     </section><!-- End  Works Section -->
 
 

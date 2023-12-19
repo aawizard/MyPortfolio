@@ -10,7 +10,7 @@
 # General
 --------------------------------------------------------------*/
 body {
-  font-family: "Roboto", monospace;
+  font-family: "Inconsolata", monospace;
   color: #0d1e2d;
 }
 
@@ -385,10 +385,34 @@ h6,
 .custom-navbar {
   padding-top: 50px;
   width: 100%;
-  margin-right: 30px;
+  font-family: "Inconsolata", monospace;
 }
 
-@media (max-width: 780px) {
+.custom-tile {
+  padding-top: 10px;
+  background-color: #d1f1ff;
+  /* margin-right: 1px; */
+  border: 1px solid #8fcbe7; /* Add border to the tile */
+  font-family: "Roboto", ;
+}
+.custom-tile p{
+  
+  /* padding: 30px; */
+  /* background: #f8f9fa;
+  border-radius: 4px;
+  margin-bottom: 30px; */
+  font-family: "Roboto", monospace;
+}
+.custom-tile h4{
+  padding-top: 5px;
+  color: #050c13;
+}
+
+.custom-tile h6{
+  color: #0d1e2d;
+}
+
+@media (max-width: 880px) {
   .custom-navbar>.container {
     padding-right: 0;
     padding-left: 0;
@@ -398,6 +422,10 @@ h6,
 .custom-navbar .navbar-brand {
   font-size: 1.7rem;
 }
+.custom-navbar a {
+  margin-right: 10px;
+}
+
 
 /* Burger */
 .burger {
