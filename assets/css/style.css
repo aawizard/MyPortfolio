@@ -449,6 +449,11 @@ h6,
   margin-bottom: 20px;
 }
 
+.discription iframe {
+  /* width: 100%; */
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 .discription h3 {
   /* font-size: 26px;
   font-weight: 700; */

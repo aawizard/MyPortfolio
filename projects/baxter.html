@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Selective-Grasping</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Favicons -->
+  <!-- <link href="assets/img/favicon.png" rel="icon"> -->
+  <!-- <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> -->
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=https://fonts.googleapis.com/css?family=Inconsolata:400,500,600,700|Raleway:400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="../assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: MyPortfolio
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/myportfolio-bootstrap-portfolio-website-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+  <nav class="navbar navbar-light custom-navbar">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Ananya Agarwal</a>
+      <div class="row-md-1">
+      <a href="../about.html">About Me</a>
+      <a href="../resume.html">Resume</a>
+      <a href="../contact.html">Contact</a>
+        <span></span>
+      </a>
+    </div>
+  </nav>
+
+
+  <main id="main">
+
+    <section class="section pb-5">
+        <div class="container">
+            <div class="row  align-items-end">
+                <div class="col-md-6 text-center mx-auto" data-aos="fade-up">
+                    <h2>Robotic Grasp Prediction for Selective Objects in a Cluttered Environment using Object Centric Masking</h2>
+                    
+                </div>
+            </div>
+
+            <div class="col discription">
+                <div class="col mb-md-0 " data-aos="fade-up">
+                    
+                    <h3>Video demo</h3>
+                    <p class="text-center"><iframe width="560" height="315" src="https://www.youtube.com/embed/WEli7ceSR84" frameborder="0" allowfullscreen></iframe></p>
+
+                    <h3>Abstract</h3>
+                    <p >Intelligent grasping is a very active field of research in robotics. In the current scenario, a robot can identify the object pose (position and orientation) and pick it up by predicting a grasp rectangle but cannot predict the grasp parameters for a particular class of object out of multiple objects in a cluttered environment. Also, the architectures used for predicting grasp parameters usually suffer from the problem of finding regions of interest (ROI) in a large-size image or image with multiple objects, which deteriorates the prediction quality. To solve this shortcoming, we have proposed a method to identify the ROI and concentrate the grasp prediction model on the ROI. We have used a state-of-the-art object detection model YOLOv5 and grasp prediction model GR-ConvNet as major components of our method. The YOLOv5 network is used to localize the object of interest in the scene and outputs the position coordinates for the object of interest. We propose a novel center-passing mechanism for GR-ConvNet, which considers the object location as reference while pre-processing the image. It uses a white mask technique for isolating the object of interest. With our white masking approach, we are claiming an accuracy of 96.25% on Cornell Dataset. 
+                        Our method is also tested in a real-world scenario for two objects: a duster and screwdriver in a  cluttered scenes.
+                        Experimentally we have demonstrated a successful grasp execution on a 7 DOF Baxter robot with 87.80% and 79.07% accuracy on sparsely and densely placed objects respectively. </p>
+                    
+                </div>
+                <div class="col mb-md-0 text-center" data-aos="fade-up">
+                  <p><a href="https://drive.google.com/file/d/1EaSwFNNqOnN-yQBVzM1j0VqsBraHLVlF/view?usp=sharing" class="readmore">View Paper</a></p>
+                </div>
+            </div>
+            
+
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+
+  <!-- ======= Footer ======= -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="row">
+
+        <div class=" social text-center mx-auto">
+          
+          <a href="https://github.com/aawizard"><span class="bi bi-github"></span></a>
+          <a href="mailto:aawizard@u.northwestern.edu"><span class="bi bi-envelope"></span></a>
+          <!-- <a href="#"><span class="bi bi-instagram"></span></a> -->
+          <a href="https://www.linkedin.com/in/ananya-agarwal-0b60a3192/"><span class="bi bi-linkedin"></span></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>
