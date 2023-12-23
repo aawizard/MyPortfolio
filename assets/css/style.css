@@ -388,8 +388,14 @@ h6,
   font-family: "Inconsolata", monospace;
 }
 
+/* #portfolio-grid {
+  margin-right: -15px; 
+  margin-left: -15px; 
+} */
+
 .custom-tile {
-  padding-top: 10px;
+  /* height: 100%; */
+  padding-top: 15px;
   background-color: #d1f1ff;
   /* margin-right: 1px; */
   border: 1px solid #8fcbe7; /* Add border to the tile */
@@ -420,12 +426,39 @@ h6,
 }
 
 .custom-navbar .navbar-brand {
-  font-size: 1.7rem;
+  font-size: 1.9rem;
+  font-weight: 550;
+  /* font-family: 'Courier New', Courier, monospace; */
 }
 .custom-navbar a {
   margin-right: 10px;
 }
 
+
+/* Discription */
+.discription {
+  margin: 30px;
+  /* background: #f8f9fa;
+  border-radius: 4px;
+  margin-bottom: 30px; */
+}
+
+.discription img {
+  /* width: 70%; */
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.discription h3 {
+  /* font-size: 26px;
+  font-weight: 700; */
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.discription li {
+  margin-left: 3%;
+  /* padding-left: 30px; */
+}
 
 /* Burger */
 .burger {

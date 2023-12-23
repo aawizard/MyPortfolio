@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Youbot</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <!-- <link href="assets/img/favicon.png" rel="icon"> -->
+  <!-- <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> -->
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=https://fonts.googleapis.com/css?family=Inconsolata:400,500,600,700|Raleway:400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="../assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: MyPortfolio
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/myportfolio-bootstrap-portfolio-website-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+  <nav class="navbar navbar-light custom-navbar">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Ananya Agarwal</a>
+      <div class="row-md-1">
+      <a href="../about.html">About Me</a>
+      <a href="../resume.html">Resume</a>
+      <a href="../contact.html">Contact</a>
+        <span></span>
+      </a>
+    </div>
+  </nav>
+
+
+  <main id="main">
+
+    <section class="section pb-5">
+        <div class="container">
+            <div class="row  align-items-end">
+                <div class="col-md-6 text-center mx-auto" data-aos="fade-up">
+                    <h2> Kuka motion planning similation</h2>
+                    
+                </div>
+            </div>
+
+            <div class="col discription">
+                <div class="col mb-md-0 " data-aos="fade-up">
+                    <h3>Brief Overview</h3>
+                    <p >This project aims to control a Youbot to pick and place a block with user-specific positions and then simulate it in Coppeliasim. The algorithm first generates a reference traject of the end-effector and then applies feedback control to manipulate the Youbot.</p>
+                    <h3>Video demo</h3>
+                    <p class=""><img src="../assets/img/project-449.gif" alt="Image" class="img-fluid mx-auto d-block "></p>
+                    <h3>Algorithm description</h3>
+                    <p>The <strong>NextState</strong> function calculates the robot’s configuration at the next time step using the first-order Euler method.</p>
+
+                    <p>The <strong>TrajectoryGenerator</strong> function takes in the transformation matrix of some required waypoints and outputs a list of transformation matrices of end-effector with respect to the space frame.</p>
+
+                    <p>There are 8 stages in the simulation:</p>
+                    <ol>
+                    <li>A trajectory to move the gripper from its initial configuration to a “standoff” configuration a few cm above the block.</li>
+                    <li>A trajectory to move the gripper down to the grasp position.</li>
+                    <li>Closing of the gripper.</li>
+                    <li>A trajectory to move the gripper back up to the “standoff” configuration.</li>
+                    <li>A trajectory to move the gripper to a “standoff” configuration above the final configuration.</li>
+                    <li>A trajectory to move the gripper to the final configuration of the object.</li>
+                    <li>Opening of the gripper.</li>
+                    <li>A trajectory to move the gripper back to the “standoff” configuration.</li>
+                    </ol>
+
+                    <p>In each stage, the algorithm uses the <strong>ScrewTrajectory</strong> function from the modern robotics python library. The function takes in the start and end Transformation of the gripper. It generates discrete trajectory as a list of end-effector transformation matrices using the third-order/ fifth-order polynomial time-scaling method.</p>
+
+                    <p>The <strong>FeedbackControl</strong> function is used to calculate the kinematic task-space feedforward plus feedback control law, shown below.<br />
+                    <img src="../assets/img/youbot1.png" alt="Image" class="img-fluid mx-auto d-block "></p>
+                    
+                    
+                    <h3 id="initial-setups">Initial setups</h3>
+                    <p><br /></p>
+                    <ol>
+                    <li>The default initial cube postion in world frame is:<br />
+                    <img src="../assets/img/youbot2.png" alt="alt text" /></li>
+                    <li>The default final cube position in world frame is:<br />
+                    <img src="../assets/img/youbot3.png" alt="alt text" /></li>
+                    <li>The initial configuration of the robot is:<br /><br />
+                        <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>0.6, - 0.2, - 0.2, 0, 0, 0.2, - 1.6, 0, 0, 0, 0, 0, 0]
+                    </code></pre></div>    </div>
+                    </li>
+                    </ol>
+
+                    <h3 id="results">Results</h3>
+                    <p><br />
+                    Three situations were considered as results.</p>
+                    <ol>
+                        <li>Best: a result with a well-tuned controller with the default cube positon
+                          <ul>
+                            <li>After tunning, a feedforward-plus-PI control with a Kp of 2.0 and a Ki of 0.001 is used. The Xerror plot is shown below: <br />
+                       <img src="../assets/img/youbot-best.png" alt="alt text" /></li>
+                          </ul>
+                        </li>
+                        <li>Overshoot: a result with a less-well-tuned controller with the default cube positon
+                          <ul>
+                            <li>After tunning, a feedforward-plus-PI control with a Kp of 20.0 and a Ki of 0.1 is used. The Xerror plot is shown below: <br />
+                       <img src="../assets/img/youbot-overshoot.png" alt="alt text" /></li>
+                          </ul>
+                        </li>
+                        <li>newTask: a result with another specified initial and final cube position
+                          <ul>
+                            <li>The new initial cube position is (1.0 m, 1.0 m, 0 rad) in the world frame</li>
+                            <li>The new final cube position is (2.0 m, -1.0 m, 0 rad) in the world frame</li>
+                            <li>After tunning, a feedforward-plus-PI control with a Kp of 2.5 and a Ki of 0.001 is used. The Xerror plot is shown below: <br />
+                       <img src="../assets/img/youbot-newTask.png" alt="alt text" />
+                      <br /><br /></li>
+                          </ul>
+                        </li>
+                      </ol>
+                  
+                    
+                </div>
+                <div class="col mb-md-0 text-center" data-aos="fade-up">
+                  <p><a href="https://github.com/aawizard/Capstone_Robotic_Manipulation" class="readmore">Github</a></p>
+                </div>
+            </div>
+            
+
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+
+  <!-- ======= Footer ======= -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="row">
+
+        <div class=" social text-center mx-auto">
+          
+          <a href="https://github.com/aawizard"><span class="bi bi-github"></span></a>
+          <a href="mailto:aawizard@u.northwestern.edu"><span class="bi bi-envelope"></span></a>
+          <!-- <a href="#"><span class="bi bi-instagram"></span></a> -->
+          <a href="https://www.linkedin.com/in/ananya-agarwal-0b60a3192/"><span class="bi bi-linkedin"></span></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>
