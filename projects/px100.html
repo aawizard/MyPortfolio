@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Pen Challange</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <!-- <link href="assets/img/favicon.png" rel="icon"> -->
+  <!-- <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> -->
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=https://fonts.googleapis.com/css?family=Inconsolata:400,500,600,700|Raleway:400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="../assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: MyPortfolio
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/myportfolio-bootstrap-portfolio-website-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+  <nav class="navbar navbar-light custom-navbar">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">Ananya Agarwal</a>
+      <div class="row-md-1">
+      <a href="../about.html">About Me</a>
+      <a href="../resume.html">Resume</a>
+      <a href="../contact.html">Contact</a>
+        <span></span>
+      </a>
+    </div>
+  </nav>
+
+
+  <main id="main">
+
+    <section class="section pb-5">
+        <div class="container">
+            <div class="row  align-items-end">
+                <div class="col-md-6 text-center mx-auto" data-aos="fade-up">
+                    <h2> Kuka motion planning similation</h2>
+                    
+                </div>
+            </div>
+
+            <div class="col discription">
+                <div class="col mb-md-0 " data-aos="fade-up">
+                    <h3>Brief Overview</h3>
+                    <p >Track the pen autonomously using Computer Vision, grab the pen and pass it to the next robot.</p>
+                    <h3>Video demo</h3>
+                    <p class=""><img src="../assets/img/px100.gif" alt="Image" class="img-fluid mx-auto d-block "></p>
+                    <h3>Project Description</h3>
+                    <p>Performed background subtraction and color thresholding with a RGBD camera to determine the 3D location of pen. Coded a Pincher X100 4-DOF robot arm in Python to grab the pen through inverse kinematics.
+                    </p>
+
+                    <h3>Tasks/Steps</h3>
+                    <ol>
+                        <li>The code utilizes the pyrealsense2 library for RealSense camera interaction, along with numpy and cv2 for general image processing.</li>
+                        <li>It imports the InterbotixManipulatorXS class from the interbotix_xs_modules.xs_robot.arm module for robot arm control.</li>
+                        <li>Initializes the robot arm (bot) and sets it to the sleep pose, releases the gripper, and adjusts gripper pressure.</li>
+                        <li>Configures the RealSense pipeline for depth and color streams with specified resolutions.</li>
+                        <li>Starts the RealSense pipeline, retrieves device information, including intrinsic parameters for color and depth streams.</li>
+                        <li>Captures frames from the RealSense camera, aligns depth and color frames, and removes the background based on depth information.</li>
+                        <li>Uses color thresholding and contour detection to identify the object (pen) location in the color image.</li>
+                        <li>Calculates the centroid and average depth of the detected object.</li>
+                        <li>Converts pixel coordinates and depth to real-world coordinates.</li>
+                        <li>Displays the color image with the identified object, its centroid, and real-world coordinates.</li>
+                        <li>Allows user interaction using keyboard keys (h, s, c, o, l, g) for various actions such as moving the arm, releasing/grasping the gripper, and setting end-effector poses.</li>
+                        <li>Pressing 'q' or 'Esc' closes the image window and stops the RealSense pipeline.</li>
+                    </ol>
+            
+
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+
+  <!-- ======= Footer ======= -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="row">
+
+        <div class=" social text-center mx-auto">
+          
+          <a href="https://github.com/aawizard"><span class="bi bi-github"></span></a>
+          <a href="mailto:aawizard@u.northwestern.edu"><span class="bi bi-envelope"></span></a>
+          <!-- <a href="#"><span class="bi bi-instagram"></span></a> -->
+          <a href="https://www.linkedin.com/in/ananya-agarwal-0b60a3192/"><span class="bi bi-linkedin"></span></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>

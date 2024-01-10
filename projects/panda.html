@@ -66,6 +66,14 @@
 
                     <h3>Video demo</h3>
                     <p class="text-center"><iframe width="560" height="315" src="https://www.youtube.com/embed/Q81Vcnj9kqs" frameborder="0" allowfullscreen></iframe></p>
+                    <h3>Team Members</h3>
+                    <ul>
+                      <li>Graham Clifford</li>
+                      <li>Ishani Narwankar</li>
+                      <li>Abhishek Sankar</li>
+                      <li>Srikanth Schelbert</li>
+                      <li>Ananya Agarwal</li>
+                    </ul>
                     <h3>Game Rules and project sequence</h3>
                     <p>The game is played with a human in the loop.</p>
                     <ul>
@@ -81,12 +89,74 @@
                     <h3>Approach</h3>
                     <p>The robot uses a combination of computer vision and manipulation to play the game. The robot uses a camera to detect the human's guesses and the word. The robot then uses inverse kinematics to move the arm to the appropriate position to draw the letter or the body part. The robot uses forward kinematics to move the arm to the appropriate position to draw the letter or the body part. The robot uses forward kinematics to move the arm to the appropriate position to draw the letter or the body part. The robot uses forward kinematics to move the arm to the appropriate position to draw the letter or the body part. The robot uses forward kinematics to move the arm to the appropriate position to draw the letter or the body part. The robot uses forward kinematics to move the arm to the appropriate position to draw the letter or the body part. The robot uses forward kinematics to move the arm to the appropriate position to draw the letter or the body part.</p>
 
+                    <h3>Nodes</h3>
+                    <p>The image below shows our system architecture and how the nodes communicate with each other.</p>
+                    <p>Task of each node is as follows:</p>
+                    <ul>
+                      <li><strong>Brain:</strong> This node is the main node that controls the game. It starts by calling services offered by the Tags node to detect the word and then calls a series of services from respective nodes to keep the game going.</li>
 
+                      <li><strong>Tags:</strong> This is the node in the entire system that knows where everything is in the world. (Main responsibility in the project)</li>
+
+                      <li><strong>Kickstart:</strong> The node draws the blanks and noose on the board.</li>
+
+                      <li><strong>Image Modification:</strong> Taking in the image of the player, it modifies and rectifies the image to be optimal for Paddle OCR to make a guess.</li>
+
+                      <li><strong>Paddle OCR:</strong> Receiving the rectified image, it uses the PaddleOCR ML model to read the letter/word written on the board.</li>
+
+                      <li><strong>Draw:</strong> Given a list of points for a letter, it draws them on the board. It also checks for the force applied by the board; if force is below a threshold, it moves the marker towards the board and vice versa, providing more reliable writing.</li>
+                    <p class=""><img src="../assets/img/Node_diagram.png" alt="Image" class="img-fluid mx-auto d-block "></p>
+                      </ul>
                    
-                    
-                    
+                    <h3>Custom Python Franka API</h3>
+                    <p>In order for this project to be viable, a main task our team accomplished was writing a custom Python API for the robot to be able to move in space without issues with singularities. This library also includes custom functions to run the force on the end effector for the control.</p>
+
+                    <p>The following capabilities were granted with the implementation of our functions:</p>
+
+                    <ul>
+                        <li><strong>Calculating Inverse Kinematics:</strong> Achieving the joint positions for a given pose.</li>
+
+                        <li><strong>Calculating Torques/Forces:</strong> Determining the torques/forces on the end effector.</li>
+
+                        <li><strong>Queueing Poses:</strong> Creating a trajectory by queuing poses.</li>
+
+                        <li><strong>Planning and Executing:</strong> Handling both cartesian paths and MoveIt movements to given points.</li>
+
+                        <li><strong>Replanning Paths:</strong> Dynamically replanning paths that violate the force admittance control.</li>
+                    </ul>
+                   <h3>Optical Character Recognition</h3>    
+                   <p>The OCR pipeline employed the use of the open-source PaddleOCR toolkit due to its speed and accuracy. To cater to the requirement of processing both single letters and full words written by the player, ensuring effective OCR reading in both scenarios, we implemented the following approach:</p>
+
+                    <ul>
+                        <li>By processing two image feeds, each optimized either for single letters or full words,</li>
+
+                        <li>The pipeline ensures that the OCR is capable of reading both effectively.</li>
+
+                        <li>The result is a high-confidence guess that can be passed to the hangman node.</li>
+                    </ul>             
+                    <h3>Tags Node</h3>
+                    <p>This section of the project encompasses my primary role. The Tags Node is responsible for understanding the spatial layout of the environment, including the board's position, the position of each letter, and the body parts of the hanging man on the board.</p>
+                
+                    <h4>My Tasks:</h4>
+                    <ul>
+                        <li>Performing <strong>eye-in-hand camera calibration</strong> to determine the camera's position relative to the robot.</li>
+                        <li>Using <strong>April Tag</strong> to localize the board with respect to the camera and, consequently, the robot arm.</li>
+                        <li>Completing the <strong>Tags</strong> node to offer relevant services so that every other node knows where it should write on the board.</li>
+                    </ul>
+                
+                    <h4>Services Offered by Tags Node</h4>
+                    <ul>
+                        <li><strong>calibrate_service</strong>: Search for tag 11 and create a board frame relative to that. First, it moves to a position where the camera can see the April tag. Then it waits for an updated transform and creates a board transform.</li>
+                        <li><strong>where_to_write</strong>: Give the pose of the end-effector to write a particular letter. The service takes parameters like the mode (indicating whether it's for the right letter, wrong letter, or drawing), the position of the letter, trajectory coordinates (x, y), and onboard status. It then provides the initial standoff position for starting the letter off-board and a list of poses needed to write the letter.</li>
+                        <li><strong>update_trajectory</strong>: When the threshold force is reached and the marker needs to be moved into or out of the board, this service is called. It takes a list of poses and a direction indicator (whether to move towards or away from the board) as input. It then returns an updated list of poses based on the force control, adjusting the poses accordingly.</li>
+                    </ul>
                   
-                    
+                    <h3>Challanges and Future Work</h3>
+                    <p>
+                      While initially developing a spring force control adapter for the Franka gripper as a fallback option, our team quickly transitioned to exploring force control, which significantly enhanced our project. By the demo day, we successfully utilized force control to draw characters on the board. However, further refinement of force control parameters could have improved the writing quality with additional tuning time.
+                      
+                    </p><p>In addition to enhancing force control, our team had a vision to introduce a dynamic element to the game where the robot would pick up different colored pens based on the player's guess accuracy. We designed and manufactured a pen stand, initiated gripper code finalization, and began calibrating the robot to an April tag on the pen stand. Unfortunately, time constraints prevented us from integrating this feature into the final gameplay.
+                      
+                      </p><p>As a final stretch goal, we aimed to introduce variability by changing the board's position between player turns. Leveraging April tags and force control, this enhancement would have been feasible with extra time to precisely calibrate the camera's position relative to the board and robot.</p>
                 </div>
                 <div class="col mb-md-0 text-center" data-aos="fade-up">
                   <p><a href="https://github.com/aawizard/Capstone_Robotic_Manipulation" class="readmore">Github</a></p>
