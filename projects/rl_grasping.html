@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Dexterous Grasping</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <!-- <link href="assets/img/favicon.png" rel="icon"> -->
+  <!-- <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> -->
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=https://fonts.googleapis.com/css?family=Inconsolata:400,500,600,700|Raleway:400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="../assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: MyPortfolio
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/myportfolio-bootstrap-portfolio-website-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+  <nav class="navbar navbar-light custom-navbar">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">Ananya Agarwal</a>
+      <div class="row-md-1">
+      <a href="../index.html">Projects</a>
+      <a href="../about.html">About Me</a>
+      <a href="../resume.html">Resume</a>
+      <a href="../contact.html">Contact</a>
+        <span></span>
+      </a>
+    </div>
+  </nav>
+
+
+  <main id="main">
+
+    <section class="section pb-5">
+        <div class="container">
+            <div class="row  align-items-end">
+                <div class="col-md-6 text-center mx-auto" data-aos="fade-up">
+                    <h2> Allego + Franka doing Dexterous Grasping</h2>
+                    
+                </div>
+            </div>
+
+            <div class="col discription">
+                <div class="col mb-md-0 " data-aos="fade-up">
+                    <h3>Brief Overview</h3>
+                    <p >The objective of this solo project was to enable a multi-finger robot to grasp commonly used objects. The project utilized the Mujoco environment for policy training and implemented sim2real techniques to deploy the trained policy onto the physical robot.</p>
+
+                    <h3>Video demo</h3>
+                    <p class="text-center"><iframe width="560" height="315" src="https://www.youtube.com/embed/PGhHzJX8ALY?si=nYK3LCMetfZ7e3XH" frameborder="0" allowfullscreen></iframe></p>
+                    <h3>Software setup</h3>
+                    The Mujoco environment was used for policy training. The environment was set up on a local machine and the policy was trained using the OpenAI Baselines library.
+                    <!-- space of 1 line -->
+                    <p></p>    
+                    <h5><b>Mujoco</b></h5>
+                    Mujoco environment is used to simulate the physics between robot and the object. Each environment has one object at a time.
+                    There are 22 actuators for the robot: 16 corresponding to the joints in the fingers and 6 corresponding to the pose of the robot.
+                    <p class="text-center"><img src="../assets/img/mujoco1.png" alt="Image" class="img-fluid mx-auto d-block "  width="560" height="315"></p>
+
+                    <p><b>Camera Positions: </b>
+                    <ol>
+                    <li> first_person </li>
+                    <li> left</li>
+                    <li> right</li>
+                    <li> egocentric</li>
+                    <li> egocentric_zoom</li>
+                    </ol>
+                    </p>
+
+                    Each finger along with palm also has a touch sensor which is used to detect wether the object is in contact with the finger or not.
+
+                    <!-- //Two images side by side -->
+                    <div class="row">
+                    <div class="col-md-6">
+                    <p class="text-center"><img src="../assets/img/allegro_camera.png" alt="Image" class="img-fluid mx-auto d-block "  width="560" height="315"></p>
+                    </div>
+                    <div class="col-md-6">
+                    <p class="text-center"><img src="../assets/img/allegro_touch.png" alt="Image" class="img-fluid mx-auto d-block "  width="560" height="315"></p>
+                    </div>
+                    </div>
+
+                    <h3>Policy Training</h3>
+                    <p>The project is inspired by <a href="https://vision.cs.utexas.edu/projects/graff-dexterous-affordance-grasp/">Learning Dexterous Grasping with Object-Centric Visual Affordances</a>.</p>
+                    <p> The image from the fixed camera is used to predict the affordances, i.e. the part of the object that should be held by the robot. This network is trained on contactdb dataset. </p>
+                    <p class="text-center"><img src="../assets/img/contact_affordance.png" alt="Image" class="img-fluid mx-auto d-block "  width="860" height="315"></p>
+
+                    <p><strong>RL Training:</strong> An actor critic model is used to train the PPO policy. OpenAI StableBaseline library is used is used to implement it.</p>
+                    <p><strong>Action Space: </strong>It is a 22DoF system with a continous space between joint limits. </p>
+
+                    <h3>Hardware</h3>
+                    <p> <strong> Allegro Hand</strong> is attached to a <strong>Emika Panda Franka arm</strong> using a machined part. </p>
+                    <p class="text-center"><img src="../assets/img/franka_mount.png" alt="Image" class="img-fluid mx-auto d-block "  width="560" height="315"></p>
+
+                    <h3>Sim2Real</h3>
+                    The joint angles from the simulation are used.
+                    Once we have the joints angles for a good grasp, it is smoothened and sent to the robot.
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                        <p class="text-center"><img src="../assets/img/joints_graph1.png" alt="Image" class="img-fluid mx-auto d-block "  width="560" height="315"></p>
+                        <!-- Image Caption -->
+                        <p class="text-center"> Joint states from the policy</p>
+                        </div>
+                        <div class="col-md-6">
+                        <p class="text-center"><img src="../assets/img/joints_graph2.png" alt="Image" class="img-fluid mx-auto d-block "  width="560" height="315"></p>
+                        <p class="text-center"> Joint states given to robot</p>
+                        </div>
+                    </div>
+                    <p> These joint states are given to Allegro hand using the PD controler it offers and franka is controlled through telleop.</p>
+
+                    <h3>Results</h3>
+                    <p> The policy was trained for 1M timesteps. </p>
+                    <p class="text-center"><img src="../assets/img/grasp.gif" alt="Image" class="img-fluid mx-auto d-block "  width="860" height="315"></p>
+
+                <div class="col mb-md-0 text-center" data-aos="fade-up">
+                  <p><a href="https://github.com/aawizard/Capstone_Robotic_Manipulation" class="readmore">Github</a></p>
+                </div>
+            </div>
+            
+
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+
+  <!-- ======= Footer ======= -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="row">
+
+        <div class=" social text-center mx-auto">
+          
+          <a href="https://github.com/aawizard"><span class="bi bi-github"></span></a>
+          <a href="mailto:aawizard@u.northwestern.edu"><span class="bi bi-envelope"></span></a>
+          <!-- <a href="#"><span class="bi bi-instagram"></span></a> -->
+          <a href="https://www.linkedin.com/in/ananya-agarwal-0b60a3192/"><span class="bi bi-linkedin"></span></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>
