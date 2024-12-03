@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Ananya-Portfolio</title>
+    <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <!-- <link href="assets/img/favicon.png" rel="icon"> -->
+  <!-- <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> -->
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=https://fonts.googleapis.com/css?family=Inconsolata:400,500,600,700|Raleway:400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="../assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: MyPortfolio
+  * Updated: Sep 18 2023 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/myportfolio-bootstrap-portfolio-website-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+  <nav class="navbar navbar-light custom-navbar">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">Ananya Agarwal</a>
+      <div class="row-md-1">
+      <a href="../index.html">Projects</a>
+      <a href="../about.html">About Me</a>
+      <a href="../resume.html">Resume</a>
+      <a href="../contact.html">Contact</a>
+        <span></span>
+      </a>
+    </div>
+  </nav>
+
+
+  <main id="main">
+
+    <section class="section pb-5">
+        <div class="container">
+            <div class="row  align-items-end">
+                <div class="col-md-6 text-center mx-auto" data-aos="fade-up">
+                    <h2> Min snap drone control with mathmatical simulation</h2>
+                    
+                </div>
+            </div>
+
+            <div class="col discription">
+                <div class="col mb-md-0 " data-aos="fade-up">
+                    <h3>Brief Overview</h3>
+                    <p >The objective is to achieve precise and efficient quadrotor movement from point A to B in the minimum possible time. The project involves developing a mathematical simulation for a given hardware design, replicating its controls, creating a ROS-based control loop with a PID controller, and implementing a minimum snap trajectory generator and trajectory controller.</p>
+
+                    <h3>Video demo</h3>
+                    <!-- <p class="text-center"><iframe width="560" height="315" src="https://www.youtube.com/embed/PGhHzJX8ALY?si=nYK3LCMetfZ7e3XH" frameborder="0" allowfullscreen></iframe></p> -->
+                     TODO
+                    <h3>Hardware setup</h3>
+                    <p>
+                        The quadrotor hardware includes a <b>Betaflight flight controller</b>, a <b>Raspberry Pi 0</b> for processing, and <b>1103 brushless motors</b> with KV ratings of 8000 to 15000 RPM/V. The controller takes inputs such as <b>roll, pitch, yaw (1050-1900 range)</b>, and <b>throttle (1000-1900 range)</b>.
+                      </p>
+                      
+                      <p>
+                        The drone's position is independently tracked using <b>OptiTrack</b>, providing precise positional data for validation and control loop optimization.
+                      </p>
+                      
+                    <p class="text-center"><img src="../assets/img/drone_hardware.jpeg" alt="Image" class="img-fluid mx-auto d-block "  width="360" height="215"></p>
+                    <h3>Software setup</h3>
+                    <p>
+                        The simulation is developed in <b>Python</b> and <b>ROS2</b> visualizing in <b>Rviz</b>. The simulation includes a quadrotor model with a <b>minimum snap trajectory generator</b> and a <b>trajectory controller</b>.
+                      </p>
+                      
+                      <p>
+                        The control loop is implemented in <b>ROS</b> using <b>Python</b> and <b>rospy</b>. The control loop includes a <b>PID controller</b> or <b>Trajectory controller</b> for roll, pitch, yaw, and throttle.
+                      </p>
+                    <!-- space of 1 line -->
+                    <p></p>    
+                    <h5><b>ROS Control Loop</b></h5>
+                    <h5><b>Controller on-board quadrotor</b></h5>
+                    <h5><b>Listening pos from optitrack</b></h5>
+                 
+                    <h3>Results</h3>
+                    <h5><b>PID sim</b></h5>
+                    <h5><b>PID hardware</b></h5>
+                    <h5><b>Min-snap sim</b></h5>
+                    <h5><b>Min-snap hardware</b></h5>
+                    
+                <div class="col mb-md-0 text-center" data-aos="fade-up">
+                  <p><a href="https://github.com/aawizard/quad_ws" class="readmore">Github</a></p>
+                </div>
+            </div>
+            
+
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+
+  <!-- ======= Footer ======= -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="row">
+
+        <div class=" social text-center mx-auto">
+          
+          <a href="https://github.com/aawizard"><span class="bi bi-github"></span></a>
+          <a href="mailto:aawizard@u.northwestern.edu"><span class="bi bi-envelope"></span></a>
+          <!-- <a href="#"><span class="bi bi-instagram"></span></a> -->
+          <a href="https://www.linkedin.com/in/ananya-agarwal-0b60a3192/"><span class="bi bi-linkedin"></span></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>
