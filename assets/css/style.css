@@ -534,7 +534,14 @@ h6,
 .burger:focus {
   outline: none;
 }
+.equation {
+  margin: 20px 0;
+  text-align: center;
+}
 
+summary h4 {
+  margin: 0; /* Remove extra margin */
+}
 /*--------------------------------------------------------------
 # Footer
 --------------------------------------------------------------*/

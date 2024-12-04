@@ -24,6 +24,7 @@
 
   <!-- Template Main CSS File -->
   <link href="../assets/css/style.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <!-- =======================================================
   * Template Name: MyPortfolio
@@ -78,6 +79,7 @@
                       </p>
                       
                     <p class="text-center"><img src="../assets/img/drone_hardware.jpeg" alt="Image" class="img-fluid mx-auto d-block "  width="360" height="215"></p>
+                    <p></p>
                     <h3>Software setup</h3>
                     <p>
                         The simulation is developed in <b>Python</b> and <b>ROS2</b> visualizing in <b>Rviz</b>. The simulation includes a quadrotor model with a <b>minimum snap trajectory generator</b> and a <b>trajectory controller</b>.
@@ -88,15 +90,173 @@
                       </p>
                     <!-- space of 1 line -->
                     <p></p>    
-                    <h5><b>ROS Control Loop</b></h5>
-                    <h5><b>Controller on-board quadrotor</b></h5>
-                    <h5><b>Listening pos from optitrack</b></h5>
+                    <details>
+                    <summary  style="font-size: 1.45em; font-weight: bold;">Simulation</summary>
+                    
+                      <div>
+                       
+                        <p>
+                          The control inputs provided to the quadrotor are as follows:
+                        </p>
+                        <ul>
+                          <li><b>Roll, Pitch, and Yaw:</b> Input values range from 1050 to 1900. A value of 1500 corresponds to the neutral position. Roll and pitch inputs are scaled to absolute angles based on the maximum tilt angle set in the Betaflight flight controller.</li>
+                          <li><b>Throttle:</b> Input values range from 1000 to 1900, where 1000 represents 0% thrust and 1900 corresponds to 100% thrust.</li>
+                        </ul>
+                    
+                        <h6><b>Control and Simulation Process:</b></h6>
+                        <ol>
+                          <li><b>PWM to Angle Conversion:</b> Roll and pitch targets are calculated using the formula:
+                            <p>
+                              \[
+                              \text{Target Angle} = \left( \frac{\text{Input} - 1050}{900} \times 110 \right) - 55
+                              \]
+                            </p>
+                          </li>
+                          <li><b>Thrust Calculation:</b> The thrust is calculated as:
+                            <p>
+                              \[
+                              \text{Thrust} = \frac{\text{Input} - 1000}{1000} \times \text{Max Thrust}
+                              \]
+                            </p>
+                          </li>
+                          <li><b>PID Control:</b> PID controllers are implemented for roll and pitch stabilization. The error is the difference between the target angle and the current angle:
+                            <p>
+                              \[
+                              \text{Error}_{\text{roll}} = \text{Target Roll (rad)} - \text{Current Roll (rad)}
+                              \]
+                              \[
+                              \text{Error}_{\text{pitch}} = \text{Target Pitch (rad)} - \text{Current Pitch (rad)}
+                              \]
+                            </p>
+                            The control effort is updated using the PID formula:
+                            <p>
+                              \[
+                              \text{Control Effort} = K_p \times \text{Error} + K_i \times \int \text{Error} \, dt + K_d \times \frac{d(\text{Error})}{dt}
+                              \]
+                            </p>
+                          </li>
+                          <li><b>Thrust Transformation:</b> The thrust in the body frame is converted to the world frame using the rotation matrix:
+                            <p>
+                              \[
+                              \mathbf{Thrust}_{\text{GF}} = \mathbf{R}_{\text{BF→GF}} \times \begin{bmatrix} 0 \\ 0 \\ \text{Thrust} \end{bmatrix}
+                              \]
+                            </p>
+                            Where \(\mathbf{R}_{\text{BF→GF}}\) is the rotation matrix derived from the roll, pitch, and yaw angles.
+                          </li>
+                          <li><b>Position Updates:</b> The acceleration in each axis is computed, and velocities and positions are updated:
+                            <p>
+                              \[
+                              \ddot{z} = \frac{\text{Thrust}_{z, \text{GF}}}{m} - g
+                              \]
+                              \[
+                              \ddot{x} = -\frac{\text{Thrust}_{x, \text{GF}}}{m}, \quad \ddot{y} = -\frac{\text{Thrust}_{y, \text{GF}}}{m}
+                              \]
+                              \[
+                              \dot{x} = \dot{x} + \ddot{x} \cdot dt, \quad x = x + \dot{x} \cdot dt
+                              \]
+                            </p>
+                            Similar equations apply for \(y\) and \(z\).
+                          </li>
+                        </ol>
+                    
+                        <h6><b>Key Considerations:</b></h6>
+                        <ul>
+                          <li><b>Ground Constraint:</b> If \(z < 0\), the quadrotor is grounded, and all velocities are set to zero.</li>
+                          <li><b>Random Perturbations:</b> Small random variations are introduced to \(p\) and \(q\) to simulate real-world disturbances.</li>
+                        </ul>
+                        <h5>Drone Marker Visualization</h5>
+                        <p>
+                          The simulation includes a visualization of the drone as a marker in Rviz. While the marker does not accurately represent the physical dimensions of the drone, it serves as a visual aid to demonstrate its position and orientation during the simulation. Below is a snapshot of the visualization:
+                        </p>
+                        <p class="text-center">
+                          <img src="../assets/img/drone_visualization.png" alt="Drone Marker Visualization" class="img-fluid mx-auto d-block" width="360" height="215">
+                        </p>
+
+                      </div>
+                    </details>
+                                       
+                    <details>
+                      <summary style="font-size: 1.45em; font-weight: bold;">Controller On Board</summary>
+                      <div style="margin-left: 20px;">
+                        <h5>Raspberry Pi Zero Communication</h5>
+                        <p>
+                          The Raspberry Pi Zero serves as the intermediary between the control commands and the Betaflight flight controller on the quadrotor. It communicates with the base station computer through a UDP connection, running at a frequency of 100 Hz. The control messages it sends include throttle, roll, pitch, yaw, arm/disarm status, and flight mode.
+                        </p>
+                        <h6>Control Commands Sent to the Raspberry Pi</h6>
+                        <ul>
+                          <li><b>Throttle</b>: The throttle value to control the motor speed.</li>
+                          <li><b>Roll</b>: The roll command to control the drone's roll angle.</li>
+                          <li><b>Pitch</b>: The pitch command to control the drone's pitch angle.</li>
+                          <li><b>Yaw</b>: The yaw command to control the drone's yaw angle.</li>
+                          <li><b>Aux1 (Arm/Disarm)</b>: Controls the arm/disarm state of the drone.
+                            <ul>
+                              <li><b>1000</b>: Disarm</li>
+                              <li><b>1800</b>: Arm</li>
+                            </ul>
+                          </li>
+                          <li><b>Aux2 (Mode)</b>: Controls the flight mode of the drone. There are two modes:
+                            <ul>
+                              <li><b>Angle Mode</b>: Stabilized flight mode, where the drone tries to maintain a fixed angle.</li>
+                              <li><b>Horizon Mode</b>: A hybrid mode between manual and stabilized, with limited angle control.</li>
+                            </ul>
+                          </li>
+                        </ul>
+                        
+                        <h6>Communication with Betaflight Controller</h6>
+                        <p>
+                          The Raspberry Pi uses the <b>yamspy</b> library to communicate with the Betaflight controller board. The communication is based on the MSP (Multiwii Serial Protocol) to send control commands to the flight controller.
+                        </p>
+                        
+                        <h6>Control Node</h6>
+                        <p>
+                          The drone control node subscribes to the <code>/quad_ctrl</code> topic and receives the control commands. It then sends the commands to the Raspberry Pi through UDP, ensuring smooth control of the drone.
+                        </p>
+                      </div>
+                    </details>
+                    
+                    <details>
+                      <summary style="font-size: 1.45em; font-weight: bold;">Communication with Optitrack</summary>
+                      
+                      <p><strong>What Happens on the Optitrack Station:</strong></p>
+                      <p>
+                          On the Optitrack station, a rigid body is created within the Motive app. This rigid body represents the drone or its tracking system. A script is then executed to track the current position of the rigid body in real-time. The script sends the position data through a UDP connection to the base station. The data sent includes:
+                      </p>
+                      <ul>
+                          <li><b>x, y, z</b>: Position coordinates of the rigid body.</li>
+                          <li><b>x, y, z, w</b>: Quaternion values representing the orientation of the rigid body.</li>
+                      </ul>
+                      <p>The UDP connection continuously transmits the position and orientation data from Optitrack to the base station for further processing.</p>
+                  
+                      <p><strong>What Happens on the BaseStation:</strong></p>
+                      <p>
+                          On the BaseStation, the system listens for the incoming UDP messages containing the position and orientation data. Upon receiving the data, it performs the following steps:
+                      </p>
+                      <ul>
+                          <li>The system extracts the <b>x, y, z</b> position and <b>x, y, z, w</b> quaternion orientation values from the UDP message.</li>
+                          <li>The system then converts these values into a ROS <code>PoseStamped</code> message format, which is compatible with ROS2 for further processing.</li>
+                          <li>The pose is also transformed to set a desired origin or reference frame, ensuring that the position data aligns with the control and simulation systems.</li>
+                          <li>Additionally, a transformation is published, allowing other nodes in the ROS ecosystem to subscribe to and use the pose and orientation data for further control or monitoring purposes.</li>
+                      </ul>
+                      <p>This process allows the base station to track and control the position of the drone based on the data received from Optitrack, providing real-time feedback for control loop adjustments.</p>
+                  
+                  </details>
+                  
+                  
+                    <h4><b>ROS Control Loop</b></h4>
+                    <ol><strong>Nodes</strong>
+                      <li>Controller</li>
+                      <li>Simulation</li>
+                      <li>Optitrack</li>
+
+                    </ol>
+
+                    <h3>Min-snap Trajectory</h3>
                  
                     <h3>Results</h3>
-                    <h5><b>PID sim</b></h5>
-                    <h5><b>PID hardware</b></h5>
-                    <h5><b>Min-snap sim</b></h5>
-                    <h5><b>Min-snap hardware</b></h5>
+                    <h4><b>PID sim</b></h4>
+                    <h4><b>PID hardware</b></h4>
+                    <h4><b>Min-snap sim</b></h4>
+                    <h4><b>Min-snap hardware</b></h4>
                     
                 <div class="col mb-md-0 text-center" data-aos="fade-up">
                   <p><a href="https://github.com/aawizard/quad_ws" class="readmore">Github</a></p>
