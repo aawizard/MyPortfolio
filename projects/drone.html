@@ -243,13 +243,329 @@
                   
                   <details>
                     <summary style="font-size: 1.25em; font-weight: bold;">ROS Control Loop</summary>
+                    <p>
+                      The drone, whether in simulation or real-world scenarios, can be controlled in three distinct ways: 
+                      <strong>Joystick control</strong>, <strong>PID controller</strong>, or <strong>Minimum Snap Trajectory controller</strong>. 
+                      These methods allow flexibility depending on the task and environment. The control loop adapts seamlessly 
+                      between user inputs, algorithm-based adjustments, or predefined trajectory commands, ensuring efficient and 
+                      precise control of the drone.
+                    </p>
+                    <div style="text-align: center; margin: 20px 0;">
+                      <img src="joystick_control_loop.png" alt="Joystick Control Loop" style="max-width: 80%; height: auto;">
+                      <figcaption style="font-size: 0.9em; margin-top: 5px;">Figure 1: Joystick-based control loop</figcaption>
+                    </div>
+                    <div style="text-align: center; margin: 20px 0;">
+                      <img src="pid_control_loop.png" alt="PID Controller Control Loop" style="max-width: 80%; height: auto;">
+                      <figcaption style="font-size: 0.9em; margin-top: 5px;">Figure 2: PID Controller-based control loop</figcaption>
+                    </div>
+                    <div style="text-align: center; margin: 20px 0;">
+                      <img src="traj_control_loop.png" alt="Minimum Snap Trajectory Control Loop" style="max-width: 80%; height: auto;">
+                      <figcaption style="font-size: 0.9em; margin-top: 5px;">Figure 3: Minimum Snap Trajectory-based control loop</figcaption>
+                    </div>
                     <ol><strong>Nodes</strong>
-                      <li>Controller</li>
-                      <li>Simulation</li>
-                      <li>Optitrack</li>
+                      <details>
+                        <summary style="font-weight: bold;">Joystick Node</summary>
+                        <p>
+                          The <strong>Joystick Node</strong> enables interaction between the user and the drone by processing input from a joystick. 
+                          It translates joystick commands into drone control messages and publishes these commands to a topic for further use by 
+                          other nodes in the control system.
+                        </p>
+                        <p>
+                          <strong>Subscriptions:</strong>
+                          <ul>
+                            <li><em>No subscriptions.</em></li>
+                          </ul>
+                          <strong>Publications:</strong>
+                          <ul>
+                            <li><code>/quad_ctrl</code>: Publishes joystick commands as a <code>QuadCmd</code> message containing roll, pitch, throttle, yaw, armed status, and mode.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>Communication with the Joystick:</strong>
+                          <ul>
+                            <li>Reads joystick inputs using a compatible library, capturing the state of axes and buttons.</li>
+                            <li>Maps joystick inputs to drone control commands, such as roll, pitch, throttle, and yaw.</li>
+                            <li>Includes functionality for arming the drone and switching modes based on button presses.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>Key Features:</strong>
+                          <ul>
+                            <li>Maps joystick axes to roll, pitch, throttle, and yaw values, ensuring precise user control over the drone's movements.</li>
+                            <li>Processes button presses to toggle the drone's armed state and change flight modes.</li>
+                            <li>Publishes user commands to the <code>/quad_ctrl</code> topic in real time, enabling other nodes to execute the desired actions.</li>
+                            <li>Implements a safety mechanism by monitoring the state of the armed flag to ensure safe operation.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>Node Workflow:</strong>
+                          <ol>
+                            <li>Starts by initializing the joystick interface and configuring input mappings for axes and buttons.</li>
+                            <li>Continuously reads input data from the joystick at a predefined rate.</li>
+                            <li>Processes the joystick data to compute control values for roll, pitch, throttle, and yaw.</li>
+                            <li>Determines the drone's armed state and flight mode based on specific button presses.</li>
+                            <li>Publishes the computed control commands to the <code>/quad_ctrl</code> topic in the form of a <code>QuadCmd</code> message.</li>
+                          </ol>
+                        </p>
+                      </details>
+                      
 
+                      <details>
+                        <summary style="font-weight: bold;">Drone Control Node</summary>
+                        <p>
+                          The <strong>Drone Control Node</strong> is responsible for controlling the drone's behavior based on received control commands. 
+                          It subscribes to relevant topics that provide the current state of the drone, processes these inputs, and publishes 
+                          commands to actuate the drone's motors, adjusting its flight dynamics accordingly.
+                        </p>
+                        <p>
+                          <strong>Subscriptions:</strong>
+                          <ul>
+                            <li><code>/quad_pose</code>: Subscribes to the drone's pose (position and orientation) using a <code>PoseStamped</code> message.</li>
+                            <li><code>/quad_ctrl</code>: Subscribes to control commands for the drone (roll, pitch, throttle, yaw, armed state, mode) 
+                                using a <code>QuadCmd</code> message to initiate control actions.</li>
+                          </ul>
+                          <strong>Publications:</strong>
+                          <ul>
+                            <li><code>/drone_control_feedback</code>: Publishes feedback on the drone's current control status, position, and orientation.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>Communication with Other Nodes:</strong>
+                          <ul>
+                            <li>Receives control commands from the joystick node through the <code>/quad_ctrl</code> topic to determine the desired drone 
+                                movements (e.g., roll, pitch, throttle, yaw, armed status, and mode).</li>
+                            <li>Receives the current pose of the drone from the <code>/quad_pose</code> topic to assess the drone's position and orientation.</li>
+                            <li>Processes both control and pose data to compute necessary actions for motor commands and flight adjustments.</li>
+                            <li>Publishes feedback about the drone's current state to the <code>/drone_control_feedback</code> topic for monitoring purposes.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>Key Features:</strong>
+                          <ul>
+                            <li>Receives control input (roll, pitch, throttle, yaw) and applies the necessary transformations to actuate the drone’s flight.</li>
+                            <li>Monitors the armed state and mode of the drone to ensure it responds only when it is safe and in the correct mode.</li>
+                            <li>Uses PID or other control strategies to smoothen and stabilize the drone’s movements based on current pose and desired commands.</li>
+                            <li>Provides real-time feedback to other systems about the drone's position, orientation, and control status.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>Node Workflow:</strong>
+                          <ol>
+                            <li>Subscribes to the <code>/quad_pose</code> topic to get the current pose (position and orientation) of the drone.</li>
+                            <li>Subscribes to the <code>/quad_ctrl</code> topic to receive control commands for roll, pitch, throttle, yaw, and the armed status.</li>
+                            <li>Based on the control commands, adjusts the motor outputs to achieve the desired flight dynamics (e.g., stabilize pitch, roll, and yaw).</li>
+                            <li>Applies a control algorithm (e.g., PID) to minimize error between the desired and actual states (e.g., position and orientation).</li>
+                            <li>Publishes feedback about the drone's status (current position, orientation, etc.) on the <code>/drone_control_feedback</code> topic for monitoring.</li>
+                          </ol>
+                        </p>
+                      </details>
+                      
+                      <details>
+                        <summary style="font-weight: bold;">Quad Listener Node</summary>
+                        <p>
+                          The <strong>Quad Listener Node</strong> facilitates communication between the drone's position tracking system 
+                          (OptiTrack) and the ROS environment. It receives UDP packets containing the drone's position and orientation data, 
+                          applies necessary transformations to correct offsets, and publishes the corrected pose to the ROS network.
+                        </p>
+                        <p>
+                          <strong>Subscriptions:</strong>
+                          <ul>
+                            <li><em>No subscriptions.</em></li>
+                          </ul>
+                          <strong>Publications:</strong>
+                          <ul>
+                            <li><code>/quad_pose</code>: Publishes the corrected position and orientation of the drone as a <code>PoseStamped</code> message.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>Communication with OptiTrack:</strong>
+                          <ul>
+                            <li>Uses a UDP socket to receive real-time tracking data from OptiTrack. The data includes the drone's position (x, y, z) and orientation (quaternion qx, qy, qz, qw).</li>
+                            <li>Processes the received data to remove offsets specific to each drone ("bird") based on parameters defined in a YAML file.</li>
+                            <li>Corrects the received position and orientation using transformation matrices that adjust for the drone's predefined offsets in both position and orientation.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>TF Broadcasting:</strong>
+                          <ul>
+                            <li>Broadcasts a transform named <code>drone</code> relative to the <code>map</code> frame, providing real-time positional and orientation updates of the drone in the ROS TF tree.</li>
+                            <li>The transform is continuously updated at 100Hz, ensuring smooth and accurate representation of the drone's pose in the world frame.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>Key Features:</strong>
+                          <ul>
+                            <li>Loads drone-specific position and orientation offsets from a YAML file.</li>
+                            <li>Applies mathematical transformations to adjust the received pose data, ensuring that the published pose accurately reflects the drone's corrected position and orientation in the world frame.</li>
+                            <li>Handles exceptions such as missing data or invalid configurations, ensuring robust communication with the tracking system.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>Node Workflow:</strong>
+                          <ol>
+                            <li>Starts a UDP server to listen for incoming tracking data.</li>
+                            <li>Loads bird-specific offsets from the YAML file and verifies their correctness.</li>
+                            <li>Processes incoming UDP messages to extract positional and orientation data.</li>
+                            <li>Applies the offset transformations using a combination of translation and rotation matrices.</li>
+                            <li>Publishes the corrected pose to the <code>/quad_pose</code> topic.</li>
+                            <li>Broadcasts the corrected pose as a transform in the TF tree, enabling other nodes to access real-time drone position and orientation information.</li>
+                          </ol>
+                        </p>
+                      </details>
+                      
+                      <details>
+                        <summary style="font-weight: bold;">QuadSim Node</summary>
+                        <p>
+                          The <strong>QuadSim Node</strong> simulates the behavior of a quadrotor drone by processing control inputs and updating the drone's pose 
+                          (position and orientation) over time. It interfaces with a quadrotor model to compute the drone's state based on the control commands, 
+                          publishes the updated pose, and visualizes the drone's parts using markers.
+                        </p>
+                        <p>
+                          <strong>Subscriptions:</strong>
+                          <ul>
+                            <li><code>/quad_ctrl</code>: Subscribes to control commands for the drone (throttle, roll, pitch, yaw, armed state) using a <code>QuadCmd</code> message.</li>
+                          </ul>
+                          <strong>Publications:</strong>
+                          <ul>
+                            <li><code>/quad_pose</code>: Publishes the drone's updated pose (position and orientation) as a <code>PoseStamped</code> message.</li>
+                            <li><code>visualization_marker_array</code>: Publishes a visualization of the drone's parts using a <code>MarkerArray</code> message.</li>
+                            <li><code>/tf</code>: Publishes the transform between the "map" and "base_link" frames of the drone.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>Communication with Other Nodes:</strong>
+                          <ul>
+                            <li>Receives control commands from the <code>/quad_ctrl</code> topic, including throttle, roll, pitch, yaw, and armed state.</li>
+                            <li>Uses the quadrotor model to compute the new state of the drone based on these control inputs.</li>
+                            <li>Publishes the drone's current pose to the <code>/quad_pose</code> topic.</li>
+                            <li>Publishes markers representing the drone's parts and the drone's current state for visualization in RViz.</li>
+                            <li>Publishes a transform (TF) to define the position and orientation of the drone in the "map" frame.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>Key Features:</strong>
+                          <ul>
+                            <li>Simulates the behavior of a quadrotor drone based on control inputs (throttle, roll, pitch, yaw) from a <code>QuadCmd</code> message.</li>
+                            <li>Converts the drone's position and orientation from Euler angles to quaternion format for consistency with ROS conventions.</li>
+                            <li>Visualizes the drone's body parts (e.g., arms, motors) using RViz markers.</li>
+                            <li>Calculates the new state of the drone (position, orientation) based on the quadrotor dynamics and control inputs.</li>
+                            <li>Publishes the updated pose and transform data for external systems or visualization.</li>
+                          </ul>
+                        </p>
+                        <p>
+                          <strong>Node Workflow:</strong>
+                          <ol>
+                            <li>The node initializes parameters such as initial position, frame ID, and sets up communication channels (subscription and publication).</li>
+                            <li>Subscribes to the <code>/quad_ctrl</code> topic to receive control commands (throttle, roll, pitch, yaw, armed state).</li>
+                            <li>Uses the quadrotor model (in the <code>quadrotor</code> class) to compute the new drone state based on the control inputs.</li>
+                            <li>Converts Euler angles (roll, pitch, yaw) into a quaternion for proper ROS integration.</li>
+                            <li>Publishes the drone's updated pose (position and orientation) to the <code>/quad_pose</code> topic.</li>
+                            <li>Publishes the transform between the "map" and "base_link" frames to the <code>/tf</code> topic for accurate positioning in 3D space.</li>
+                            <li>Generates a visualization of the drone's body using <code>MarkerArray</code> messages, displaying parts such as arms and motors in RViz.</li>
+                          </ol>
+                        </p>
+                      </details>
+                      
+                      <details>
+                        <summary style="font-weight: bold;">Controller PID Node</summary>
+                        <p><strong>Node Overview:</strong></p>
+                        <p>
+                          The <code>Controller_pid</code> node controls the quadcopter's position using PID controllers for altitude, roll, pitch, and yaw. It subscribes to the quadcopter's current position and publishes control commands to adjust its position toward a desired target in 3D space.
+                        </p>
+                      
+                        <p><strong>Key Features:</strong></p>
+                        <ul>
+                          <li>PID control for altitude (Z axis), roll and pitch (X and Y axes), and yaw adjustment.</li>
+                          <li>Real-time path tracking by publishing the quadcopter’s actual position over time.</li>
+                          <li>Customizable desired position parameters for dynamic control.</li>
+                          <li>Support for both simulation and real drone with different PID gain configurations.</li>
+                          <li>Automatic arming of the drone when certain conditions are met during operation.</li>
+                        </ul>
+                      
+                        <p><strong>Node Workflow:</strong></p>
+                        <ol>
+                          <li>The node initializes and fetches parameters for the desired position and mode (real drone or simulation).</li>
+                          <li>Based on the mode (simulation or real), appropriate PID controller gains for altitude, roll, pitch, and yaw are configured.</li>
+                          <li>The node subscribes to the <code>quad_pose</code> topic to receive the current position of the quadcopter.</li>
+                          <li>The <code>listener_callback</code> function updates the current position of the quadcopter whenever new data is received from the <code>quad_pose</code> topic.</li>
+                          <li>In the <code>timer_callback</code> function, control commands (throttle, roll, pitch) are computed based on the difference between the current position and the desired position using the PID controllers.</li>
+                          <li>When the flag condition is met, the node arms the drone and publishes control commands to the <code>quad_ctrl</code> topic.</li>
+                          <li>The node also continuously publishes the actual position path to the <code>actual_path</code> topic for visualization.</li>
+                        </ol>
+                      
+                        <p><strong>Subscribers:</strong></p>
+                        <ul>
+                          <li><code>quad_pose</code> - Subscribes to the current position of the quadcopter (message type: <code>PoseStamped</code>).</li>
+                        </ul>
+                      
+                        <p><strong>Publishers:</strong></p>
+                        <ul>
+                          <li><code>quad_ctrl</code> - Publishes control commands (throttle, roll, pitch, yaw) to the quadcopter (message type: <code>QuadCmd</code>).</li>
+                          <li><code>actual_path</code> - Publishes the actual path of the quadcopter for visualization (message type: <code>Path</code>).</li>
+                        </ul>
+                      
+                        <p><strong>Functions:</strong></p>
+                        <ul>
+                          <li><code>listener_callback</code> - Updates the current position of the quadcopter and appends the position to the actual path.</li>
+                          <li><code>timer_callback</code> - Runs periodically to compute control commands based on position errors and publishes them to the <code>quad_ctrl</code> topic.</li>
+                          <li><code>set_desired_position</code> - Allows updating the desired position dynamically.</li>
+                        </ul>
+                      </details>
+                      
+                      
+                      
+                      <details>
+                        <summary>Controller Trajectory Node</summary>
+                        <p><strong>Node Overview:</strong></p>
+                        <p>
+                          The <code>controller_traj</code> node manages the trajectory tracking of a quadcopter by using a trajectory controller and PID controllers for altitude, roll, and pitch. It tracks the position of the quadcopter, computes errors, and adjusts the control inputs (throttle, roll, pitch, yaw) to move the quadcopter toward a desired position.
+                        </p>
+                      
+                        <p><strong>Key Features:</strong></p>
+                        <ul>
+                          <li>Trajectory tracking using a <code>TrajectoryController</code> for smooth path execution.</li>
+                          <li>PID controllers for altitude, roll, and pitch stabilization.</li>
+                          <li>Ability to control both simulation and real drone with customizable PID gains.</li>
+                          <li>Publishing the quadcopter’s trajectory and actual position for visualization.</li>
+                          <li>Automatic arming of the drone when it reaches a safe position and starts the trajectory.</li>
+                        </ul>
+                      
+                        <p><strong>Node Workflow:</strong></p>
+                        <ol>
+                          <li>The node initializes parameters for the desired position and simulation mode (real drone or simulation).</li>
+                          <li>It subscribes to the <code>quad_pose</code> topic to receive the current position and orientation of the quadcopter.</li>
+                          <li>The <code>listener_callback</code> function updates the current position and sets up the trajectory controller if it's the first position.</li>
+                          <li>In the <code>timer_callback</code> function, the node computes control commands based on the trajectory tracking and PID control outputs for altitude, roll, and pitch.</li>
+                          <li>Control commands are published to the <code>quad_ctrl</code> topic for the quadcopter to follow.</li>
+                          <li>The trajectory path and actual path are continuously published to the <code>traj_path</code> and <code>actual_path</code> topics for visualization.</li>
+                        </ol>
+                      
+                        <p><strong>Subscribers:</strong></p>
+                        <ul>
+                          <li><code>quad_pose</code> - Subscribes to the current position of the quadcopter (message type: <code>PoseStamped</code>).</li>
+                        </ul>
+                      
+                        <p><strong>Publishers:</strong></p>
+                        <ul>
+                          <li><code>quad_ctrl</code> - Publishes control commands (throttle, roll, pitch, yaw) to the quadcopter (message type: <code>QuadCmd</code>).</li>
+                          <li><code>traj_path</code> - Publishes the desired trajectory path (message type: <code>Path</code>).</li>
+                          <li><code>actual_path</code> - Publishes the actual path followed by the quadcopter (message type: <code>Path</code>).</li>
+                        </ul>
+                      
+                        <p><strong>Functions:</strong></p>
+                        <ul>
+                          <li><code>listener_callback</code> - Updates the current position and sets up the trajectory controller if it's the first position.</li>
+                          <li><code>timer_callback</code> - Runs periodically to compute and publish control commands based on trajectory tracking and PID control.</li>
+                          <li><code>euler_to_quaternion</code> - Converts Euler angles (roll, pitch, yaw) to quaternion for orientation representation.</li>
+                          <li><code>quaternion_to_euler</code> - Converts quaternion orientation to Euler angles (roll, pitch, yaw).</li>
+                          <li><code>add_trajectory_point</code> - Adds a point to the desired trajectory path.</li>
+                          <li><code>set_desired_position</code> - Allows dynamic updates to the desired target position.</li>
+                        </ul>
+                      </details>
+                      
+                      
                     </ol>
-                    </details>
+                  </details>
 
                     <h3>Controllers</h3>
                     <details>
