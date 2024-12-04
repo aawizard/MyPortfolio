@@ -56,7 +56,7 @@
         <div class="container">
             <div class="row  align-items-end">
                 <div class="col-md-6 text-center mx-auto" data-aos="fade-up">
-                    <h2> Min snap drone control with mathmatical simulation</h2>
+                    <h2> Minimum snap drone control with mathematical simulation</h2>
                     
                 </div>
             </div>
@@ -91,7 +91,7 @@
                     <!-- space of 1 line -->
                     <p></p>    
                     <details>
-                    <summary  style="font-size: 1.45em; font-weight: bold;">Simulation</summary>
+                    <summary  style="font-size: 1.25em; font-weight: bold;">Simulation</summary>
                     
                       <div>
                        
@@ -103,7 +103,7 @@
                           <li><b>Throttle:</b> Input values range from 1000 to 1900, where 1000 represents 0% thrust and 1900 corresponds to 100% thrust.</li>
                         </ul>
                     
-                        <h6><b>Control and Simulation Process:</b></h6>
+                        <h5><b>Control and Simulation Process:</b></h5>
                         <ol>
                           <li><b>PWM to Angle Conversion:</b> Roll and pitch targets are calculated using the formula:
                             <p>
@@ -159,7 +159,7 @@
                           </li>
                         </ol>
                     
-                        <h6><b>Key Considerations:</b></h6>
+                        <h5><b>Key Considerations:</b></h5>
                         <ul>
                           <li><b>Ground Constraint:</b> If \(z < 0\), the quadrotor is grounded, and all velocities are set to zero.</li>
                           <li><b>Random Perturbations:</b> Small random variations are introduced to \(p\) and \(q\) to simulate real-world disturbances.</li>
@@ -176,13 +176,13 @@
                     </details>
                                        
                     <details>
-                      <summary style="font-size: 1.45em; font-weight: bold;">Controller On Board</summary>
+                      <summary style="font-size: 1.25em; font-weight: bold;">Controller On Board</summary>
                       <div style="margin-left: 20px;">
                         <h5>Raspberry Pi Zero Communication</h5>
                         <p>
                           The Raspberry Pi Zero serves as the intermediary between the control commands and the Betaflight flight controller on the quadrotor. It communicates with the base station computer through a UDP connection, running at a frequency of 100 Hz. The control messages it sends include throttle, roll, pitch, yaw, arm/disarm status, and flight mode.
                         </p>
-                        <h6>Control Commands Sent to the Raspberry Pi</h6>
+                        <h5>Control Commands Sent to the Raspberry Pi</h5>
                         <ul>
                           <li><b>Throttle</b>: The throttle value to control the motor speed.</li>
                           <li><b>Roll</b>: The roll command to control the drone's roll angle.</li>
@@ -202,12 +202,12 @@
                           </li>
                         </ul>
                         
-                        <h6>Communication with Betaflight Controller</h6>
+                        <h5>Communication with Betaflight Controller</h5>
                         <p>
                           The Raspberry Pi uses the <b>yamspy</b> library to communicate with the Betaflight controller board. The communication is based on the MSP (Multiwii Serial Protocol) to send control commands to the flight controller.
                         </p>
                         
-                        <h6>Control Node</h6>
+                        <h5>Control Node</h5>
                         <p>
                           The drone control node subscribes to the <code>/quad_ctrl</code> topic and receives the control commands. It then sends the commands to the Raspberry Pi through UDP, ensuring smooth control of the drone.
                         </p>
@@ -215,7 +215,7 @@
                     </details>
                     
                     <details>
-                      <summary style="font-size: 1.45em; font-weight: bold;">Communication with Optitrack</summary>
+                      <summary style="font-size: 1.25em; font-weight: bold;">Communication with Optitrack</summary>
                       
                       <p><strong>What Happens on the Optitrack Station:</strong></p>
                       <p>
@@ -241,22 +241,201 @@
                   
                   </details>
                   
-                  
-                    <h4><b>ROS Control Loop</b></h4>
+                  <details>
+                    <summary style="font-size: 1.25em; font-weight: bold;">ROS Control Loop</summary>
                     <ol><strong>Nodes</strong>
                       <li>Controller</li>
                       <li>Simulation</li>
                       <li>Optitrack</li>
 
                     </ol>
+                    </details>
 
-                    <h3>Min-snap Trajectory</h3>
+                    <h3>Controllers</h3>
+                    <details>
+                      <summary style="font-size: 1.25em; font-weight: bold;">PID Controller</summary>
+                    <div>
+                      <p>The system utilizes three PID loops for controlling the drone:</p>
+                      <ul>
+                          <li><b>Altitude (Z):</b> Maintains the desired height of the quadrotor.</li>
+                          <li><b>Roll:</b> Stabilizes the quadrotor along the roll axis and controls its motion along the <b>Y-axis</b>.</li>
+                          <li><b>Pitch:</b> Stabilizes the quadrotor along the pitch axis and controls its motion along the <b>X-axis</b>.</li>
+                      </ul>
+                  
+                      <h5>PID for Altitude (Z)</h5>
+                      <p>The altitude PID loop computes the error between the desired altitude and the current altitude. Based on this error, the PID controller calculates an output value, which determines the necessary adjustment in throttle.</p>
+                      <p>The computed output is scaled and returned as a PWM value ranging from <b>1000</b> to <b>1950</b>. This value is used as the throttle command for the drone, ensuring it maintains or reaches the desired height.</p>
+                  
+                      <h5>PID for Roll and Pitch</h5>
+                      <p>Separate PID loops for roll and pitch control the drone's stabilization along these axes and enable position control:</p>
+                      <ul>
+                          <li><b>Roll:</b> The roll PID adjusts the drone's angle to achieve the desired <b>Y-axis position</b>.</li>
+                          <li><b>Pitch:</b> The pitch PID adjusts the drone's angle to achieve the desired <b>X-axis position</b>.</li>
+                      </ul>
+                      <p>The error between the desired and actual positions in the X and Y directions is translated into roll and pitch commands, respectively. The PID controllers generate output values, which are converted to PWM signals ranging from <b>1000</b> to <b>2000</b>.</p>
+                  
+                      <h5>General Behavior</h5>
+                      <ul>
+                          <li>The controllers integrate the error over time (integral term) to address steady-state errors.</li>
+                          <li>They also consider the rate of change of the error (derivative term) to counteract overshooting and oscillations.</li>
+                          <li>The roll and pitch outputs are constrained to ensure stability and fall within a physical limit (e.g., ±55 degrees for roll and pitch).</li>
+                      </ul>
+                  
+                      <h5>Control Process</h5>
+                      <p>During each control loop:</p>
+                      <ul>
+                          <li>The altitude PID adjusts the throttle to maintain or achieve the desired height.</li>
+                          <li>The roll PID modifies the roll command to control the Y position of the drone.</li>
+                          <li>The pitch PID modifies the pitch command to control the X position of the drone.</li>
+                      </ul>
+                  
+                      <h5>Return Values</h5>
+                      <p>The key output of each PID loop is a <b>PWM signal</b> (Pulse Width Modulation), scaled and mapped to the range suitable for the drone's flight controller. These PWM signals directly drive the motors and affect the drone's movement and stability.</p>
+                  
+                    </div>
+                  </details>
+                    <p style="font-size: 1.25em; font-weight: bold;">Minimum-snap</p>
+                    <ul>
+                      <details>
+                        <summary><b>Minimum-Snap Trajectory Generator</b></summary>
+                        <p>This implementation of the trajectory generator is based on the seminal work by Vijay Kumar and colleagues, specifically their paper on <b>Minimum snap trajectory generation and control for quadrotors</b>. It computes smooth, dynamically feasible trajectories for a quadcopter by minimizing snap (the fourth derivative of position) while satisfying boundary conditions for position, velocity, acceleration, and jerk.</p>
+                    
+                        <h5>Overview</h5>
+                        <p>The generator calculates polynomial trajectories for the quadcopter's six degrees of freedom: <b>x, y, z (position), roll, pitch, and yaw</b>. The trajectory is expressed as a seventh-order polynomial, chosen for its ability to satisfy constraints on position, velocity, acceleration, and jerk at both the start and end of the trajectory.</p>
+                    
+                        <h5>Equations</h5>
+                        <p>The polynomial trajectory for a single axis is given by:</p>
+                        <p style="text-align: center;">\( x(t) = a_7 t^7 + a_6 t^6 + a_5 t^5 + a_4 t^4 + a_3 t^3 + a_2 t^2 + a_1 t + a_0 \)</p>
+                        <p>Where \( x(t) \) represents the position at time \( t \), and the coefficients \( a_0, a_1, \ldots, a_7 \) are determined to minimize the snap (fourth derivative of position):</p>
+                        <p style="text-align: center;">\( \text{Snap} = \frac{d^4x(t)}{dt^4} \).</p>
+                    
+                        <h5>Boundary Conditions</h5>
+                        <p>The trajectory ensures continuity and smoothness by satisfying the following constraints at the start (\( t = 0 \)) and end (\( t = T \)) of the trajectory:</p>
+                        <ul>
+                            <li>Position: \( x(0), x(T) \)</li>
+                            <li>Velocity: \( \dot{x}(0), \dot{x}(T) = 0 \)</li>
+                            <li>Acceleration: \( \ddot{x}(0), \ddot{x}(T) = 0 \)</li>
+                            <li>Jerk: \( \dddot{x}(0), \dddot{x}(T) = 0 \)</li>
+                        </ul>
+                    
+                        <h5>Matrix Formulation</h5>
+                        <p>The coefficients \( a_0 \) to \( a_7 \) are computed by solving the linear system:</p>
+                        <p style="text-align: center;">\( A \cdot \mathbf{c} = \mathbf{B} \)</p>
+                        <p>Where:</p>
+                        <ul>
+                            <li>\( A \): The boundary condition matrix constructed using polynomial terms and their derivatives for the start and end times.</li>
+                            <li>\( \mathbf{B} \): A vector containing the boundary conditions for position, velocity, acceleration, and jerk.</li>
+                            <li>\( \mathbf{c} \): The vector of polynomial coefficients to be solved.</li>
+                        </ul>
+                    
+                        <h5>Trajectory Evaluation</h5>
+                        <p>The trajectory can be evaluated for position, velocity, acceleration, or jerk at any time \( t \) by taking successive derivatives of the polynomial:</p>
+                        <ul>
+                            <li>Position: \( x(t) \)</li>
+                            <li>Velocity: \( \dot{x}(t) = 7a_7 t^6 + 6a_6 t^5 + \ldots + a_1 \)</li>
+                            <li>Acceleration: \( \ddot{x}(t) = 42a_7 t^5 + 30a_6 t^4 + \ldots \)</li>
+                            <li>Jerk: \( \dddot{x}(t) = 210a_7 t^4 + 120a_6 t^3 + \ldots \)</li>
+                        </ul>
+                    
+                        <h5>Key Features</h5>
+                        <ul>
+                            <li><b>Optimal Smoothness:</b> By minimizing snap, the trajectory ensures smooth and efficient motion with minimal actuator effort.</li>
+                            <li><b>Flexibility:</b> The generator can handle arbitrary boundary conditions for all six degrees of freedom.</li>
+                            <li><b>Real-Time Update:</b> Coefficients can be recomputed dynamically if the starting conditions change mid-flight.</li>
+                        </ul>
+                    
+                        <h5>Implementation Notes</h5>
+                        <p>The generator constructs individual trajectories for each degree of freedom. The coefficients for each trajectory are precomputed using matrix inversion. At runtime, the polynomial is evaluated at the desired time points to obtain position, velocity, acceleration, or jerk.</p>
+                    
+                        <h5>Relevance</h5>
+                        <p>This approach is crucial for precise quadrotor maneuvers, especially in scenarios requiring high-speed, aggressive, or dynamic flight. The implementation is directly inspired by Vijay Kumar's work, which has been widely adopted for trajectory planning in autonomous drones.</p>
+                    </details>
+                    
+
+
+
+
+                    <details>
+                      <summary><b>Controller Design</b></summary>
+                      <p>
+                          To enable the quadrotor to follow specified trajectories \( \sigma_T(t) = [r_T(t)^T, \psi_T(t)]^T \), the controller uses the following components:
+                      </p><h5>Position and Velocity Errors</h5>
+                          <p>
+                              The errors on position and velocity are defined as:
+                              \[
+                              e_p = r - r_T, \quad e_v = \dot{r} - \dot{r}_T
+                              \]
+                          </p>
+                          
+                          <h5>Desired Force Vector</h5>
+                          <p>
+                              The desired force vector for the controller and the desired body frame z-axis are calculated as:
+                              \[
+                              F_{des} = -K_p e_p - K_v e_v + mg \mathbf{x}_W + m \ddot{r}_T
+                              \]
+                              Here, \( K_p \) and \( K_v \) are positive definite gain matrices. We assume \( \|F_{des}\| \neq 0 \).
+                          </p>
+                      <h5>Total Thrust</h5>
+                          <p>
+                              The desired force is projected onto the actual body frame z-axis to compute the total thrust:
+                              \[
+                              u_1 = F_{des} \cdot z_B
+                              \]
+                          </p>
+                      <h5>Desired Orientation</h5>
+                          <p>
+                              To determine the desired orientation:
+                              <ul>
+                                  <li>The desired body frame z-axis:
+                                      \[
+                                      z_{B, des} = \frac{F_{des}}{\|F_{des}\|}
+                                      \]
+                                  </li>
+                                  <li>Using the specified yaw angle \( \psi_T(t) \), the desired body frame x-axis and y-axis are:
+                                      \[
+                                      x_{C, des} = [\cos\psi_T, \sin\psi_T, 0]^T
+                                      \]
+                                      \[
+                                      y_{B, des} = \frac{z_{B, des} \times x_{C, des}}{\|z_{B, des} \times x_{C, des}\|}, \quad x_{B, des} = y_{B, des} \times z_{B, des}
+                                      \]
+                                  </li>
+                              </ul>
+                              The desired rotation matrix is then:
+                              \[
+                              R_{des} = [x_{B, des}, y_{B, des}, z_{B, des}]
+                              \]
+                          </p>
+                      <h5>Orientation and Angular Velocity Errors</h5>
+                          <p>
+                              The orientation error is defined as:
+                              \[
+                              e_R = \frac{1}{2}(R_{des}^T W R_B - W R_B^T R_{des})^\vee
+                              \]
+                              where \( \vee \) represents the vee map converting elements of \( \text{so}(3) \) to \( \mathbb{R}^3 \).
+                          </p>
+                          <p>
+                              The angular velocity error is:
+                              \[
+                              e_\omega = \mathbf{B}[\omega_{BW}] - \mathbf{B}[\omega_{BW, T}]
+                              \]
+                          </p>
+                      <h5>Desired Moments</h5>
+                          <p>
+                              The desired moments and the remaining three inputs are computed as:
+                              \[
+                              [u_2, u_3, u_4]^T = -K_R e_R - K_\omega e_\omega
+                              \]
+                              where \( K_R \) and \( K_\omega \) are diagonal gain matrices, allowing unique gains for roll, pitch, and yaw tracking.
+                          </p>
+                  </details>
+                  
+                    </ul>
                  
                     <h3>Results</h3>
                     <h4><b>PID sim</b></h4>
                     <h4><b>PID hardware</b></h4>
-                    <h4><b>Min-snap sim</b></h4>
-                    <h4><b>Min-snap hardware</b></h4>
+                    <h4><b>Minimum-snap sim</b></h4>
+                    <h4><b>Minimum-snap hardware</b></h4>
                     
                 <div class="col mb-md-0 text-center" data-aos="fade-up">
                   <p><a href="https://github.com/aawizard/quad_ws" class="readmore">Github</a></p>
