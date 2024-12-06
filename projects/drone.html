@@ -570,46 +570,58 @@
                     <h3>Controllers</h3>
                     <details>
                       <summary style="font-size: 1.25em; font-weight: bold;">PID Controller</summary>
-                    <div>
-                      <p>The system utilizes three PID loops for controlling the drone:</p>
-                      <ul>
+                      <div>
+                        <p>The system utilizes three PID loops for controlling the drone:</p>
+                        <ul>
                           <li><b>Altitude (Z):</b> Maintains the desired height of the quadrotor.</li>
                           <li><b>Roll:</b> Stabilizes the quadrotor along the roll axis and controls its motion along the <b>Y-axis</b>.</li>
                           <li><b>Pitch:</b> Stabilizes the quadrotor along the pitch axis and controls its motion along the <b>X-axis</b>.</li>
-                      </ul>
-                  
-                      <h5>PID for Altitude (Z)</h5>
-                      <p>The altitude PID loop computes the error between the desired altitude and the current altitude. Based on this error, the PID controller calculates an output value, which determines the necessary adjustment in throttle.</p>
-                      <p>The computed output is scaled and returned as a PWM value ranging from <b>1000</b> to <b>1950</b>. This value is used as the throttle command for the drone, ensuring it maintains or reaches the desired height.</p>
-                  
-                      <h5>PID for Roll and Pitch</h5>
-                      <p>Separate PID loops for roll and pitch control the drone's stabilization along these axes and enable position control:</p>
-                      <ul>
+                        </ul>
+                    
+                        <h5>PID for Altitude (Z)</h5>
+                        <p>The altitude PID loop computes the error between the desired altitude and the current altitude. It incorporates a feedforward term and uses a scaling factor to generate a thrust output value.</p>
+                        <p><b>PID Equation with Feedforward and Scaling:</b></p>
+                        <p style="text-align: center;">
+                        \( \text{Output} = \text{Scaling_Factor} \times \left( K_p \cdot \text{Error} + K_i \cdot \int \text{Error} \cdot dt + K_d \cdot \frac{d(\text{Error})}{dt} + \text{Feedforward} \right) \)
+                        </p>
+                        <p>Where:</p>
+                        <ul>
+                          <li>\( K_p \), \( K_i \), and \( K_d \) are the proportional, integral, and derivative gains, respectively.</li>
+                          <li>\( \text{Error} \) is the difference between the desired and current values.</li>
+                          <li>\( \text{Feedforward} \) is a predefined term to account for expected system behavior.</li>
+                          <li>\( \text{Scaling_Factor} \) adjusts the output to match the system's dynamics.</li>
+                        </ul>
+                        <p>The final output is mapped to a PWM signal in the range <code>1000</code> to <code>1950</code>.</p>
+                    
+                        <h5>PID for Roll and Pitch</h5>
+                        <p>Separate PID loops for roll and pitch control the drone's stabilization along these axes and enable position control:</p>
+                        <ul>
                           <li><b>Roll:</b> The roll PID adjusts the drone's angle to achieve the desired <b>Y-axis position</b>.</li>
                           <li><b>Pitch:</b> The pitch PID adjusts the drone's angle to achieve the desired <b>X-axis position</b>.</li>
-                      </ul>
-                      <p>The error between the desired and actual positions in the X and Y directions is translated into roll and pitch commands, respectively. The PID controllers generate output values, which are converted to PWM signals ranging from <b>1000</b> to <b>2000</b>.</p>
-                  
-                      <h5>General Behavior</h5>
-                      <ul>
+                        </ul>
+                        <p>The roll and pitch PID logic follows similar principles to the altitude PID, with output values converted to PWM signals ranging from <code>1000</code> to <code>2000</code>.</p>
+                    
+                        <h5>General Behavior</h5>
+                        <ul>
                           <li>The controllers integrate the error over time (integral term) to address steady-state errors.</li>
-                          <li>They also consider the rate of change of the error (derivative term) to counteract overshooting and oscillations.</li>
-                          <li>The roll and pitch outputs are constrained to ensure stability and fall within a physical limit (e.g., ±55 degrees for roll and pitch).</li>
-                      </ul>
-                  
-                      <h5>Control Process</h5>
-                      <p>During each control loop:</p>
-                      <ul>
+                          <li>The derivative term considers the rate of change of error to counteract overshooting and oscillations.</li>
+                          <li>Thrust output is clamped to ensure stability and mapped to appropriate PWM values.</li>
+                        </ul>
+                    
+                        <h5>Control Process</h5>
+                        <p>During each control loop:</p>
+                        <ul>
                           <li>The altitude PID adjusts the throttle to maintain or achieve the desired height.</li>
                           <li>The roll PID modifies the roll command to control the Y position of the drone.</li>
                           <li>The pitch PID modifies the pitch command to control the X position of the drone.</li>
-                      </ul>
-                  
-                      <h5>Return Values</h5>
-                      <p>The key output of each PID loop is a <b>PWM signal</b> (Pulse Width Modulation), scaled and mapped to the range suitable for the drone's flight controller. These PWM signals directly drive the motors and affect the drone's movement and stability.</p>
-                  
-                    </div>
-                  </details>
+                        </ul>
+                    
+                        <h5>Return Values</h5>
+                        <p>The altitude PID generates a <b>PWM signal</b> between <code>1000</code> and <code>1950</code>, which directly drives the motors and affects the drone's vertical motion and stability. Similarly, roll and pitch PID outputs are mapped to motor commands to achieve desired positional corrections.</p>
+                      </div>
+                    </details>
+                    
+                    
                     <p style="font-size: 1.25em; font-weight: bold;">Minimum-snap</p>
                     <ul>
                       <details>
@@ -748,9 +760,71 @@
                     </ul>
                  
                     <h3>Results</h3>
-                    <h4><b>PID sim</b></h4>
+                    <details>
+                      <summary style="font-size: 1.25em; font-weight: bold;">PID Sim</summary>
+                      <div>
+                        <p>This section demonstrates the performance of the PID controller in a simulation environment. The drone(s) are tasked with moving to a desired location marked by a green arrow on the visualizer. The red path represents the trajectory taken by the drone(s). The simulation reveals that the PID controller takes a relatively long time (over 40 seconds) to reach the desired location.</p>
+                        
+                        <h5>Simulation Videos:</h5>
+                        <ul>
+                          <li><b>Single Drone:</b> A single drone attempts to reach the target location. Watch the video below:</li>
+                          <div style="text-align: center;">
+                          <video width="640" height="360" controls>
+                            <source src="https://github.com/user-attachments/assets/bb416b81-775d-4fb0-a81f-45abe33911f7" type="video/webm">
+                            Your browser does not support the video tag.
+                          </video>
+                        </div>
+                          <li><b>Multiple Drones:</b> Three drones form a triangular formation while moving to their respective target locations. Watch the video below:</li>
+                          <div style="text-align: center;">
+                          <video width="640" height="360" controls>
+                            <source src="https://github.com/user-attachments/assets/7d47088b-bd6c-49bf-9e73-f200998b5a22" type="video/webm">
+                            Your browser does not support the video tag.
+                          </video>
+                        </div>
+                        </ul>
+                        
+                        <h5>Position vs. Time Plot:</h5>
+                        <p>The image below shows the position vs. time plot for X, Y, and Z axes, indicating how the PID controller performs over time:</p>
+                        <div style="text-align: center;">
+                        <img src="../assets/img/pid_xyz.png" alt="Position vs Time Plot" width="940" height="360" style="border: 1px solid #ccc; display: block; margin: 10px 0;">
+                      </div>
+                        <h5>PID Gains:</h5>
+                        <ul>
+                          <li><b>Proportional Gain (\(K_p\)):</b> 0.3 (altitude), 0.1 (X and Y)</li>
+                          <li><b>Integral Gain (\(K_i\)):</b> 0.05 (altitude), 0.002 (X and Y)</li>
+                          <li><b>Derivative Gain (\(K_d\)):</b> 0.09 (altitude), 0.38 (X and Y)</li>
+                          <li><b>Feedforward:</b> 0.3 (altitude)</li>
+                        </ul>
+                      </div>
+                    </details>
+                    
                     <h4><b>PID hardware</b></h4>
-                    <h4><b>Minimum-snap sim</b></h4>
+                    <details>
+                      <summary style="font-size: 1.25em; font-weight: bold;">Minimum-snap Sim</summary>
+                      <div>
+                        <p>This section demonstrates the performance of the Minimum-snap trajectory controller in a simulation environment. The drone(s) are tasked with moving to a desired location, marked by a green arrow on the visualizer. The green path represents the trajectory predicted by the trajectory generator, while the red path shows the actual path taken by the drone(s). The simulation is much faster than the PID controller, with the drones reaching their target locations in approximately 4 seconds.</p>
+                        
+                        <h5>Simulation Video:</h5>
+                        <ul>
+                          <li><b>Multiple Drones (Formation):</b> Three drones form a triangular formation while following the predicted trajectory. Watch the video below:</li>
+                          <div style="text-align: center;">
+                            <video width="640" height="360" controls style="display: inline-block;">
+                              <source src="https://github.com/user-attachments/assets/0760f20f-2322-4fe0-b2d6-99aed7e28d5a" type="video/webm">
+                              Your browser does not support the video tag.
+                            </video>
+                          </div>
+                        </ul>
+                        
+                        <h5>PID Gains:</h5>
+                        <ul>
+                          <li><b>Proportional Gain (\(K_p\)):</b> \( \text{diag}([1.3, 1.3, 14.5]) \)</li>
+                          <li><b>Velocity Gain (\(K_v\)):</b> \( \text{diag}([1.0, 1.0, 1.7]) \)</li>
+                          <li><b>Rotation Gain (\(K_r\)):</b> 2.9</li>
+                          <li><b>Weight Gain (\(K_w\)):</b> 0.9</li>
+                        </ul>
+                      </div>
+                    </details>
+                    
                     <h4><b>Minimum-snap hardware</b></h4>
                     
                 <div class="col mb-md-0 text-center" data-aos="fade-up">
