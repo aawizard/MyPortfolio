@@ -56,7 +56,7 @@
         <div class="container">
             <div class="row  align-items-end">
                 <div class="col-md-6 text-center mx-auto" data-aos="fade-up">
-                    <h2> Minimum snap drone control with mathematical simulation</h2>
+                    <h2> Development of Minimum-Snap Trajectory Control for Drone: Hardware and Simulation Implementation with a Custom Mathematical Simulator</h2>
                     
                 </div>
             </div>
@@ -64,34 +64,29 @@
             <div class="col discription">
                 <div class="col mb-md-0 " data-aos="fade-up">
                     <h3>Brief Overview</h3>
-                    <p >The objective is to achieve precise and efficient quadrotor movement from point A to B in the minimum possible time. The project involves developing a mathematical simulation for a given hardware design, replicating its controls, creating a ROS-based control loop with a PID controller, and implementing a minimum snap trajectory generator and trajectory controller.</p>
+                    <p >This project focuses on optimizing a quadrotor's motion for efficient battery swapping in a swarm system. A mathematical simulator was developed to test trajectories, ensuring consistency between simulation and real-world performance. Using a minimum-snap trajectory, the drone completes the task in 4 seconds compared to over 40 seconds with a brute-force PID controller, greatly improving efficiency..</p>
 
                     <h3>Video demo</h3>
-                    <!-- <p class="text-center"><iframe width="560" height="315" src="https://www.youtube.com/embed/PGhHzJX8ALY?si=nYK3LCMetfZ7e3XH" frameborder="0" allowfullscreen></iframe></p> -->
-                     TODO
-                    <h3>Hardware setup</h3>
+                    <div style="text-align: center;">
+                      <video width="640" height="360" controls>
+                        <source src="https://github.com/user-attachments/assets/bb5eeca5-3b6b-43ec-a83a-5ed821dda174" type="video/webm">
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                    
+                    <h3>Software Architecture</h3>
                     <p>
-                        The quadrotor hardware includes a <b>Betaflight flight controller</b>, a <b>Raspberry Pi 0</b> for processing, and <b>1103 brushless motors</b> with KV ratings of 8000 to 15000 RPM/V. The controller takes inputs such as <b>roll, pitch, yaw (1050-1900 range)</b>, and <b>throttle (1000-1900 range)</b>.
-                      </p>
-                      
-                      <p>
-                        The drone's position is independently tracked using <b>OptiTrack</b>, providing precise positional data for validation and control loop optimization.
-                      </p>
-                      
-                    <p class="text-center"><img src="../assets/img/drone_hardware.jpeg" alt="Image" class="img-fluid mx-auto d-block "  width="360" height="215"></p>
-                    <p></p>
-                    <h3>Software setup</h3>
+                      The simulation is built using <b>Python</b> and <b>ROS2</b>, with visualization in <b>Rviz</b>. It features a quadrotor model integrated with a <b>minimum snap trajectory generator</b> and a <b>trajectory controller</b> for precise and efficient motion planning.
+                    </p>
+                    
                     <p>
-                        The simulation is developed in <b>Python</b> and <b>ROS2</b> visualizing in <b>Rviz</b>. The simulation includes a quadrotor model with a <b>minimum snap trajectory generator</b> and a <b>trajectory controller</b>.
-                      </p>
-                      
-                      <p>
-                        The control loop is implemented in <b>ROS</b> using <b>Python</b> and <b>rospy</b>. The control loop includes a <b>PID controller</b> or <b>Trajectory controller</b> for roll, pitch, yaw, and throttle.
-                      </p>
+                      The control loop, implemented in <b>ROS2</b> with <b>Python</b>, utilizes a <b>PID controller</b> or a <b>Trajectory controller</b> to manage roll, pitch, yaw, and throttle, ensuring accurate flight dynamics and stability.
+                    </p>
+                    
                     <!-- space of 1 line -->
                     <p></p>    
-                    <details>
-                    <summary  style="font-size: 1.25em; font-weight: bold;">Simulation</summary>
+                    
+                    <h4><b>Simulation</b></h4>
                     
                       <div>
                        
@@ -102,7 +97,10 @@
                           <li><b>Roll, Pitch, and Yaw:</b> Input values range from 1050 to 1900. A value of 1500 corresponds to the neutral position. Roll and pitch inputs are scaled to absolute angles based on the maximum tilt angle set in the Betaflight flight controller.</li>
                           <li><b>Throttle:</b> Input values range from 1000 to 1900, where 1000 represents 0% thrust and 1900 corresponds to 100% thrust.</li>
                         </ul>
-                    
+                        <p class="text-center">
+                          <img src="../assets/img/drone_visualization.png" alt="Drone Marker Visualization" class="img-fluid mx-auto d-block" width="360" height="215">
+                        </p>
+                        
                         <h5><b>Control and Simulation Process:</b></h5>
                         <ol>
                           <li><b>PWM to Angle Conversion:</b> Roll and pitch targets are calculated using the formula:
@@ -168,81 +166,91 @@
                         <p>
                           The simulation includes a visualization of the drone as a marker in Rviz. While the marker does not accurately represent the physical dimensions of the drone, it serves as a visual aid to demonstrate its position and orientation during the simulation. Below is a snapshot of the visualization:
                         </p>
-                        <p class="text-center">
-                          <img src="../assets/img/drone_visualization.png" alt="Drone Marker Visualization" class="img-fluid mx-auto d-block" width="360" height="215">
-                        </p>
+                        
 
                       </div>
-                    </details>
-                                       
-                    <details>
-                      <summary style="font-size: 1.25em; font-weight: bold;">Controller On Board</summary>
-                      <div style="margin-left: 20px;">
-                        <h5>Raspberry Pi Zero Communication</h5>
-                        <p>
-                          The Raspberry Pi Zero serves as the intermediary between the control commands and the Betaflight flight controller on the quadrotor. It communicates with the base station computer through a UDP connection, running at a frequency of 100 Hz. The control messages it sends include throttle, roll, pitch, yaw, arm/disarm status, and flight mode.
-                        </p>
-                        <h5>Control Commands Sent to the Raspberry Pi</h5>
-                        <ul>
-                          <li><b>Throttle</b>: The throttle value to control the motor speed.</li>
-                          <li><b>Roll</b>: The roll command to control the drone's roll angle.</li>
-                          <li><b>Pitch</b>: The pitch command to control the drone's pitch angle.</li>
-                          <li><b>Yaw</b>: The yaw command to control the drone's yaw angle.</li>
-                          <li><b>Aux1 (Arm/Disarm)</b>: Controls the arm/disarm state of the drone.
-                            <ul>
-                              <li><b>1000</b>: Disarm</li>
-                              <li><b>1800</b>: Arm</li>
-                            </ul>
-                          </li>
-                          <li><b>Aux2 (Mode)</b>: Controls the flight mode of the drone. There are two modes:
-                            <ul>
-                              <li><b>Angle Mode</b>: Stabilized flight mode, where the drone tries to maintain a fixed angle.</li>
-                              <li><b>Horizon Mode</b>: A hybrid mode between manual and stabilized, with limited angle control.</li>
-                            </ul>
-                          </li>
-                        </ul>
-                        
-                        <h5>Communication with Betaflight Controller</h5>
-                        <p>
-                          The Raspberry Pi uses the <b>yamspy</b> library to communicate with the Betaflight controller board. The communication is based on the MSP (Multiwii Serial Protocol) to send control commands to the flight controller.
-                        </p>
-                        
-                        <h5>Control Node</h5>
-                        <p>
-                          The drone control node subscribes to the <code>/quad_ctrl</code> topic and receives the control commands. It then sends the commands to the Raspberry Pi through UDP, ensuring smooth control of the drone.
-                        </p>
-                      </div>
-                    </details>
                     
-                    <details>
-                      <summary style="font-size: 1.25em; font-weight: bold;">Communication with Optitrack</summary>
+                      <h4><b>Controller On Board</b></h4>                   
+                      <p>
+                        The quadrotor's onboard controller utilizes a Raspberry Pi Zero for communication with the Betaflight flight controller. It processes control commands such as throttle, roll, pitch, yaw, and flight modes. Below are the details of the communication setup and control system.
+                      </p>
+
+                      <details style="border: 2px solid #007BFF; padding: 10px; border-radius: 8px; background-color: #f8f9fa;">
+                        <summary style="font-size: 0.9em; font-weight: bold; color: #007BFF; cursor: pointer;">Click for Detailed Overview</summary>
+                        <div style="margin-left: 20px; margin-top: 10px;">
+                          <h5>Raspberry Pi Zero Communication</h5>
+                          <p>
+                            The Raspberry Pi Zero serves as the intermediary between the control commands and the Betaflight flight controller on the quadrotor. It communicates with the base station computer through a UDP connection, running at a frequency of 100 Hz. The control messages it sends include throttle, roll, pitch, yaw, arm/disarm status, and flight mode.
+                          </p>
+                          <h5>Control Commands Sent to the Raspberry Pi</h5>
+                          <ul>
+                            <li><b>Throttle</b>: The throttle value to control the motor speed.</li>
+                            <li><b>Roll</b>: The roll command to control the drone's roll angle.</li>
+                            <li><b>Pitch</b>: The pitch command to control the drone's pitch angle.</li>
+                            <li><b>Yaw</b>: The yaw command to control the drone's yaw angle.</li>
+                            <li><b>Aux1 (Arm/Disarm)</b>: Controls the arm/disarm state of the drone.
+                              <ul>
+                                <li><b>1000</b>: Disarm</li>
+                                <li><b>1800</b>: Arm</li>
+                              </ul>
+                            </li>
+                            <li><b>Aux2 (Mode)</b>: Controls the flight mode of the drone. There are two modes:
+                              <ul>
+                                <li><b>Angle Mode</b>: Stabilized flight mode, where the drone tries to maintain a fixed angle.</li>
+                                <li><b>Horizon Mode</b>: A hybrid mode between manual and stabilized, with limited angle control.</li>
+                              </ul>
+                            </li>
+                          </ul>
+                          
+                          <h5>Communication with Betaflight Controller</h5>
+                          <p>
+                            The Raspberry Pi uses the <b>yamspy</b> library to communicate with the Betaflight controller board. The communication is based on the MSP (Multiwii Serial Protocol) to send control commands to the flight controller.
+                          </p>
+                          
+                          <h5>Control Node</h5>
+                          <p>
+                            The drone control node subscribes to the <code>/quad_ctrl</code> topic and receives the control commands. It then sends the commands to the Raspberry Pi through UDP, ensuring smooth control of the drone.
+                          </p>
+                        </div>
+                      </details>
+
                       
-                      <p><strong>What Happens on the Optitrack Station:</strong></p>
+                    
+                      <h4><b>Communication with OptiTrack</b></h4>
                       <p>
-                          On the Optitrack station, a rigid body is created within the Motive app. This rigid body represents the drone or its tracking system. A script is then executed to track the current position of the rigid body in real-time. The script sends the position data through a UDP connection to the base station. The data sent includes:
+                        The OptiTrack system provides real-time position and orientation data of the drone, which is transmitted to the base station via UDP. This data is processed on the base station for integration into the ROS2 ecosystem and drone control systems.
                       </p>
-                      <ul>
-                          <li><b>x, y, z</b>: Position coordinates of the rigid body.</li>
-                          <li><b>x, y, z, w</b>: Quaternion values representing the orientation of the rigid body.</li>
-                      </ul>
-                      <p>The UDP connection continuously transmits the position and orientation data from Optitrack to the base station for further processing.</p>
+                      
+                      <details style="border: 2px solid #007BFF; padding: 10px; border-radius: 8px; background-color: #f8f9fa;">
+                        <summary style="font-size: 0.9em; font-weight: bold; color: #007BFF; cursor: pointer;">Click for Detailed Explanation</summary>
+                        <div style="margin-left: 20px; margin-top: 10px;">
+                          <p><strong>What Happens on the OptiTrack Station:</strong></p>
+                          <p>
+                            On the OptiTrack station, a rigid body is created within the Motive app, representing the drone or its tracking system. A script tracks the current position of the rigid body in real-time and sends the data through a UDP connection to the base station. The transmitted data includes:
+                          </p>
+                          <ul>
+                            <li><b>x, y, z</b>: Position coordinates of the rigid body.</li>
+                            <li><b>x, y, z, w</b>: Quaternion values representing the orientation of the rigid body.</li>
+                          </ul>
+                          <p>The UDP connection continuously transmits this data for further processing.</p>
+                          
+                          <p><strong>What Happens on the Base Station:</strong></p>
+                          <p>
+                            On the Base Station, the system listens for UDP messages containing position and orientation data and performs the following:
+                          </p>
+                          <ul>
+                            <li>Extracts <b>x, y, z</b> position and <b>x, y, z, w</b> quaternion orientation values.</li>
+                            <li>Converts these values into a ROS <code>PoseStamped</code> message format for ROS2 compatibility.</li>
+                            <li>Transforms the pose to align with a desired origin or reference frame.</li>
+                            <li>Publishes a transformation for other ROS nodes to use for control and monitoring.</li>
+                          </ul>
+                          <p>This setup enables real-time drone tracking and control adjustments based on OptiTrack data.</p>
+                        </div>
+                      </details>
+                      
                   
-                      <p><strong>What Happens on the BaseStation:</strong></p>
-                      <p>
-                          On the BaseStation, the system listens for the incoming UDP messages containing the position and orientation data. Upon receiving the data, it performs the following steps:
-                      </p>
-                      <ul>
-                          <li>The system extracts the <b>x, y, z</b> position and <b>x, y, z, w</b> quaternion orientation values from the UDP message.</li>
-                          <li>The system then converts these values into a ROS <code>PoseStamped</code> message format, which is compatible with ROS2 for further processing.</li>
-                          <li>The pose is also transformed to set a desired origin or reference frame, ensuring that the position data aligns with the control and simulation systems.</li>
-                          <li>Additionally, a transformation is published, allowing other nodes in the ROS ecosystem to subscribe to and use the pose and orientation data for further control or monitoring purposes.</li>
-                      </ul>
-                      <p>This process allows the base station to track and control the position of the drone based on the data received from Optitrack, providing real-time feedback for control loop adjustments.</p>
                   
-                  </details>
-                  
-                  <details>
-                    <summary style="font-size: 1.25em; font-weight: bold;">ROS Control Loop</summary>
+                    <h4><b>ROS Control Loop</b></h4>
                     <p>
                       The drone, whether in simulation or real-world scenarios, can be controlled in three distinct ways: 
                       <strong>Joystick control</strong>, <strong>PID controller</strong>, or <strong>Minimum Snap Trajectory controller</strong>. 
@@ -250,6 +258,7 @@
                       between user inputs, algorithm-based adjustments, or predefined trajectory commands, ensuring efficient and 
                       precise control of the drone.
                     </p>
+                    
                     <div style="text-align: center; margin: 20px 0;">
                       <img src="../assets/img/joystick_control_loop.png" alt="Joystick Control Loop" style="max-width: 60%; height: auto;">
                       <figcaption style="font-size: 0.9em; margin-top: 5px;">Joystick-based control loop</figcaption>
@@ -262,6 +271,9 @@
                       <img src="../assets/img/traj_control_loop.png" alt=" Control Loop" style="max-width: 80%; height: auto;">
                       <figcaption style="font-size: 0.9em; margin-top: 5px;">Control loop drone</figcaption>
                     </div>
+                    <details style="border: 2px solid #007BFF; padding: 10px; border-radius: 8px; background-color: #f8f9fa;">
+                      <summary style="font-size: 0.9em; font-weight: bold; color: #007BFF; cursor: pointer;">Click for Detailed Overview</summary>
+                      <div style="margin-left: 20px; margin-top: 10px;">
                     <ol><strong>Nodes</strong>
                       <details>
                         <summary style="font-weight: bold;">Joystick Node</summary>
@@ -566,9 +578,10 @@
                       
                     </ol>
                   </details>
+                
 
                     <h3>Controllers</h3>
-                    <details>
+                    
                       <summary style="font-size: 1.25em; font-weight: bold;">PID Controller</summary>
                       <div>
                         <p>The system utilizes three PID loops for controlling the drone:</p>
@@ -619,12 +632,12 @@
                         <h5>Return Values</h5>
                         <p>The altitude PID generates a <b>PWM signal</b> between <code>1000</code> and <code>1950</code>, which directly drives the motors and affects the drone's vertical motion and stability. Similarly, roll and pitch PID outputs are mapped to motor commands to achieve desired positional corrections.</p>
                       </div>
-                    </details>
+                   
                     
                     
                     <p style="font-size: 1.25em; font-weight: bold;">Minimum-snap</p>
                     <ul>
-                      <details>
+                      
                         <summary><b>Minimum-Snap Trajectory Generator</b></summary>
                         <p>This implementation of the trajectory generator is based on the seminal work by Vijay Kumar and colleagues, specifically their paper on <b>Minimum snap trajectory generation and control for quadrotors</b>. It computes smooth, dynamically feasible trajectories for a quadcopter by minimizing snap (the fourth derivative of position) while satisfying boundary conditions for position, velocity, acceleration, and jerk.</p>
                     
@@ -677,13 +690,12 @@
                     
                         <h5>Relevance</h5>
                         <p>This approach is crucial for precise quadrotor maneuvers, especially in scenarios requiring high-speed, aggressive, or dynamic flight. The implementation is directly inspired by Vijay Kumar's work, which has been widely adopted for trajectory planning in autonomous drones.</p>
-                    </details>
                     
 
 
 
 
-                    <details>
+                    
                       <summary><b>Controller Design</b></summary>
                       <p>
                           To enable the quadrotor to follow specified trajectories \( \sigma_T(t) = [r_T(t)^T, \psi_T(t)]^T \), the controller uses the following components:
@@ -755,11 +767,22 @@
                               \]
                               where \( K_R \) and \( K_\omega \) are diagonal gain matrices, allowing unique gains for roll, pitch, and yaw tracking.
                           </p>
-                  </details>
+                  
                   
                     </ul>
-                 
-                    <h3>Results</h3>
+                  <h3>Hardware setup</h3>
+                  <p>
+                      The quadrotor hardware includes a <b>Betaflight flight controller</b>, a <b>Raspberry Pi 0</b> for processing, and <b>1103 brushless motors</b> with KV ratings of 8000 to 15000 RPM/V. The controller takes inputs such as <b>roll, pitch, yaw (1050-1900 range)</b>, and <b>throttle (1000-1900 range)</b>.
+                    </p>
+                    
+                    <p>
+                      The drone's position is independently tracked using <b>OptiTrack</b>, providing precise positional data for validation and control loop optimization.
+                    </p>
+                    
+                  <p class="text-center"><img src="../assets/img/drone_hardware.jpeg" alt="Image" class="img-fluid mx-auto d-block "  width="360" height="215"></p>
+                  <p></p>
+
+                    <!-- <h3>Results</h3>
                     <details>
                       <summary style="font-size: 1.25em; font-weight: bold;">PID Sim</summary>
                       <div>
@@ -770,14 +793,14 @@
                           <li><b>Single Drone:</b> A single drone attempts to reach the target location. Watch the video below:</li>
                           <div style="text-align: center;">
                           <video width="640" height="360" controls>
-                            <source src="https://github.com/user-attachments/assets/bb416b81-775d-4fb0-a81f-45abe33911f7" type="video/webm">
+                            <source src="https://github.com/user-attachments/assets/e06fda09-233a-4d61-922b-e55d66df690a" type="video/webm">
                             Your browser does not support the video tag.
                           </video>
                         </div>
                           <li><b>Multiple Drones:</b> Three drones form a triangular formation while moving to their respective target locations. Watch the video below:</li>
                           <div style="text-align: center;">
                           <video width="640" height="360" controls>
-                            <source src="https://github.com/user-attachments/assets/7d47088b-bd6c-49bf-9e73-f200998b5a22" type="video/webm">
+                            <source src="https://github.com/user-attachments/assets/10ae0ca7-3262-49b2-8225-5b3d3b38d438" type="video/webm">
                             Your browser does not support the video tag.
                           </video>
                         </div>
@@ -809,7 +832,7 @@
                           <li><b>Multiple Drones (Formation):</b> Three drones form a triangular formation while following the predicted trajectory. Watch the video below:</li>
                           <div style="text-align: center;">
                             <video width="640" height="360" controls style="display: inline-block;">
-                              <source src="https://github.com/user-attachments/assets/0760f20f-2322-4fe0-b2d6-99aed7e28d5a" type="video/webm">
+                              <source src="https://github.com/user-attachments/assets/58fabac4-f337-4ffe-9c37-645ca0ec1d8e" type="video/webm">
                               Your browser does not support the video tag.
                             </video>
                           </div>
@@ -826,8 +849,79 @@
                     </details>
                     
                     <h4><b>Minimum-snap hardware</b></h4>
-                    
-                <div class="col mb-md-0 text-center" data-aos="fade-up">
+                     -->
+                     <h3>Results</h3>
+
+                     <h4><b>PID Simulation and Hardware Performance</b></h4>
+                     <p>The PID controller was tested in both simulation and hardware environments. The goal was for the drone(s) to move to a desired target location, marked by a green arrow. The red path represents the trajectory taken by the drone(s), and the approximate time taken to reach the target was <b>40 seconds</b>, indicating slow convergence.</p>
+                     
+                     <h5>Simulation Video:</h5>
+                     <div style="text-align: center;">
+                       <video width="640" height="360" controls>
+                         <source src="https://github.com/user-attachments/assets/e06fda09-233a-4d61-922b-e55d66df690a" type="video/webm">
+                         Your browser does not support the video tag.
+                       </video>
+                     </div>
+                     
+                     <h5>Position vs. Time Plot:</h5>
+                     <p>The position vs. time plot for X, Y, and Z axes shows the PID controller's performance over time:</p>
+                     <div style="text-align: center;">
+                       <img src="../assets/img/pid_xyz.png" alt="Position vs Time Plot" width="940" height="360" style="border: 1px solid #ccc; display: block; margin: 10px 0;">
+                     </div>
+                     
+                     <h5>Hardware Video:</h5>
+                     <div style="text-align: center;">
+                       <video width="640" height="360" controls>
+                         <source src="https://github.com/user-attachments/assets/e21ab236-b3e4-47e2-9c1e-7abee584f9ce" type="video/webm">
+                         Your browser does not support the video tag.
+                       </video>
+                     </div>
+                     
+                     <h5>Multiple Drones in PID Control:</h5>
+                     <p>This video demonstrates the performance of multiple drones controlled using the PID controller in a simulation environment:</p>
+                     <div style="text-align: center;">
+                       <video width="640" height="360" controls>
+                         <source src="https://github.com/user-attachments/assets/10ae0ca7-3262-49b2-8225-5b3d3b38d438" type="video/webm">
+                         Your browser does not support the video tag.
+                       </video>
+                     </div>
+                     
+                     <h5>PID Gains:</h5>
+                     <ul>
+                       <li><b>Proportional Gain (𝑲ₚ):</b> 0.3 (altitude), 0.1 (X and Y)</li>
+                       <li><b>Integral Gain (𝑲ᵢ):</b> 0.05 (altitude), 0.002 (X and Y)</li>
+                       <li><b>Derivative Gain (𝑲ᵈ):</b> 0.09 (altitude), 0.38 (X and Y)</li>
+                       <li><b>Feedforward:</b> 0.3 (altitude)</li>
+                     </ul>
+                     <p><b>Note:</b> The PID gains used were identical for both simulation and hardware tests.</p>
+                     
+                     <h4><b>Minimum-Snap Trajectory Performance</b></h4>
+                     <p>The Minimum-snap trajectory controller was tested in simulation with significant improvements over the PID controller. The controller managed to guide the drone(s) to their target locations in approximately <b>4 seconds</b>, a notable improvement from the PID's 40 seconds. The green path represents the trajectory predicted by the generator, while the red path shows the actual trajectory taken by the drone(s).</p>
+                     
+                     <h5>Simulation Video:</h5>
+                     <div style="text-align: center;">
+                       <video width="640" height="360" controls>
+                         <source src="https://github.com/user-attachments/assets/58fabac4-f337-4ffe-9c37-645ca0ec1d8e" type="video/webm">
+                         Your browser does not support the video tag.
+                       </video>
+                     </div>
+                     
+                     <h5>Trajectory Plots:</h5>
+                     <p>The plots below showcase position, velocity, acceleration, jerk, and snap versus time, highlighting the smooth transitions and efficient trajectory planning achieved by the Minimum-snap controller:</p>
+                     <div style="text-align: center;">
+                       <img src="../assets/img/traj_graph.png" alt="Minimum Snap Trajectory Plots" width="940" height="1360" style="border: 1px solid #ccc; display: block; margin: 10px 0;">
+                     </div>
+                     
+                     <h5>Minimum-Snap Gains:</h5>
+                     <ul>
+                       <li><b>Proportional Gain (𝑲ₚ):</b> \( \text{diag}([1.3, 1.3, 14.5]) \)</li>
+                       <li><b>Velocity Gain (𝑲ᵥ):</b> \( \text{diag}([1.0, 1.0, 1.7]) \)</li>
+                       <li><b>Rotation Gain (𝑲ᵣ):</b> 2.9</li>
+                       <li><b>Weight Gain (𝑲𝑤):</b> 0.9</li>
+                     </ul>
+                     
+
+                     <div class="col mb-md-0 text-center" data-aos="fade-up">
                   <p><a href="https://github.com/aawizard/quad_ws" class="readmore">Github</a></p>
                 </div>
             </div>
